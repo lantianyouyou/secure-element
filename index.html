@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Secure Element API
+    </title>
+    <meta charset='utf-8'>
+    <script src='http://www.w3.org/Tools/respec/respec-w3c-common' async=""
+    class='remove'>
+</script><!--
+    <script src='../../editing/respec-w3c-common.js' async="" class='remove'></script>
+    -->
+
+    <script class='remove'>
+/*Respec configuration*/
+    var respecConfig = {
+          // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
+          specStatus:           "unofficial",
+          
+          // the specification's short name, as in http://www.w3.org/TR/short-name/
+          shortName:            "secure-element",
+
+          // if your specification has a subtitle that goes below the main
+          // formal title, define it here
+          // subtitle   :  "an excellent document",
+
+          // if you wish the publication date to be other than the last modification, set this
+          // publishDate:  "2009-08-06",
+
+          // if the specification's copyright date is a range of years, specify
+          // the start date here:
+          // copyrightStart: "2005"
+
+          // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
+          // and its maturity status
+          // previousPublishDate:  "1977-03-15",
+          // previousMaturity:  "WD",
+
+          // if there a publicly available Editor's Draft, this is the link
+          edDraftURI:           "https://opoto.github.io/secure-element",
+
+          // if this is a LCWD, uncomment and set the end of its review period
+          // lcEnd: "2009-08-05",
+
+          // editors, add as many as you like
+          // only "name" is required
+          editors:  [
+              {
+                  name:       "Olivier Potonniée"
+              ,   company:    "Gemalto"
+              ,   companyURL: "http://www.gemalto.com/"
+              },
+              {
+                  name:       "Dzung D Tran"
+              ,   company:    "Intel"
+              ,   companyURL: "http://www.intel.com/"
+              },
+          ],
+          
+          // name of the WG
+          wg:           "System Applications Working Group",
+          
+          // URI of the public WG page
+          wgURI:        "http://www.w3.org/2012/sysapps/",
+          
+          // name (without the @w3c.org) of the public mailing to which comments are due
+          wgPublicList: "public-sysapps",
+          
+          // URI of the patent status for this WG, for Rec-track documents
+          // !!!! IMPORTANT !!!!
+          // This is important for Rec-track documents, do not copy a patent URI from a random
+          // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+          // Team Contact.
+          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/58119/status",
+          // !!!! IMPORTANT !!!! MAKE THE ABOVE BLINK IN YOUR HEAD
+
+          localBiblio:  {
+            "ISO7816-4": "<cite>Identification cards -- Integrated circuit cards -- Part 4: Organization, security and commands for interchange.</cite> ISO/IEC 7816-4:2013. URL:  <a href='http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550'>http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550</a>.",
+            "ISO7816-4zz": {
+                    title:    "ISO/IEC 7816-4 Identification cards -- Integrated circuit cards -- Part 4: Organization, security and commands for interchange"
+                ,   href:     "http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550"
+                //,   authors:  [
+                //        "Dominique Hazael-Massieux"
+                //    ,   "Doug the Simple Villager"
+                //    ]
+                ,   publisher:  "ISO"
+                ,   status:   "Published"
+                }
+            }
+      };
+    </script>
+  </head>
+  <body>
+    <!-- - - - - - - - - - - - - - - Abstract - - - - - - - - - - - - - - - -->
+    <section id="abstract">
+      <p>
+        A secure element is a tamper proof device, providing a secure storage
+        and execution environment for sensitive data and processing. It offers
+        both physical and logical protection against attacks, ensuring
+        integrity and confidentiality of its content.
+      </p>
+      <p>
+        This specification defines an API to interact with secure elements, in
+        an application agnostic way. It makes no assumption on the secure
+        element type, application domain, or physical communication media.
+      </p>
+    </section>
+    <!-- - - - - - - - - - -  Status of this document - - - - - - - - - - - -->
+    <section id="sotd">
+      <p>
+        <strong>This work-in-progress specification is un unofficial draft.
+        Developpers are strongly discouraged to implement it at this
+        stage.</strong> If you are interested in implementing or using this
+        API, we encourage you to contact the editors or post on the working
+        group <a href=
+        "http://lists.w3.org/Archives/Public/public-sysapps/">mailing list</a>.
+      </p>
+      <p>
+        See <a href="#Changes">Changes section</a> for history details.
+      </p>
+    </section>
+    <!-- - - - - - - - - - - - - -  Introduction  - - - - - - - - - - - - - -->
+    <section class="informative">
+      <h2>
+        Introduction
+      </h2>
+      <p>
+        The <cite>Secure Element API</cite> defined herein allows applications
+        to interact with secure elements. Considered secure elements are those
+        complying to [[!ISO7816-4]], which defines a command/response protocol,
+        based on structured <abbr title="Application Data Unit">APDU</abbr>
+        (Application Data Unit).
+      </p>
+      <!-- - - - - - - - - - - -  Technical Background  - - - - - - - - - - - -->
+      <section>
+        <h2>
+          Technical Background
+        </h2>
+        <p>
+          Secure elements addressed by this specification are micro controllers
+          that may come in different form factors, such as:
+        </p>
+        <ul>
+          <li>Smart cards. The chip in embedded in a plastic card usually of
+          the size of a typical credit card. The card may show physical
+          contacts to communicate with the chip, or the chip may support
+          <abbr title="Near Field Communication">NFC</abbr> (Near Field
+          Communication), in which case the plastic card embeds an antenna.
+          Some cards also support both communication methods.
+          </li>
+          <li>
+            <abbr title="Subscriber Identity Module">SIM</abbr>/<abbr title=
+            "User Identification...">UICC</abbr> cards are smart cards used in
+            cellular telephony, which may be delivered in different sizes.
+          </li>
+          <li>Smart <abbr title="Storage Device">SD</abbr> cards have a similar
+          form as usual SD cards, but internally include a secure element, and
+          support an extended set of SD commands to communicate with the secure
+          element. Some of these smart SD cards also support NFC.
+          </li>
+          <li>Embedded secure elements, which are chips directly bonded on the
+          device mother board. Unlike other form factors, this one does not
+          allow interchanging or extracting the secure element, it is
+          permanently attached to the device.
+          </li>
+        </ul>
+        <p>
+          Similarly to a computer, a secure element may host one or multiple
+          applications. Typical applications are mobile network authentication
+          (SIM cards), payment (credit cards), authentication and signature
+          (corporate badges, eID, etc.), loyalty, ticketing (public
+          transports). But these are only examples, many other applications
+          have been and will be deployed.
+        </p>
+        <p>
+          Applications hosted by the secure elements are commonly named
+          <dfn>on-card</dfn> applications. Considering the limited, if any,
+          user interface of these devices, and application can only be useful
+          for a user if there is also an off-card application part, which
+          handle the dialog with the user, or with external computing
+          resources. Examples of <dfn>off-card</dfn> applications are
+          <abbr title="Automatic Toll Machines">ATM</abbr> for payment, mail
+          applications for signature, access control doors for authentication,
+          etc. This specification defines the API to use by off-card
+          applications based on web technologies.
+        </p>
+      </section><!-- Technical Background -->
+      <!-- - - - - - - - - - - - Use Cases - - - - - - - - - - - -->
+      <section>
+        <h2>
+          Use Cases
+        </h2>
+        <p>
+          This specification allows developement of web applications making use
+          of these secure element applications. Some typical use cases for this
+          API include:
+        </p>
+        <ul>
+          <li>
+            <strong>Authentication:</strong> Instead of user name and password,
+            access to an online service may be protected by a strong
+            authentication mechanism, based on credentials stored and processed
+            in a secure element. In web-based operating systems, systems
+            applications such as <abbr title=
+            "Virtual Private Network">VPN</abbr> (Virtual Private Network) or
+            eMail application may use of the secure element to authenticate the
+            user.
+          </li>
+          <li>
+            <strong>Digital Signature:</strong> Applications may use the secure
+            element to digitally sign a document or any data with a key stored
+            in this secure element. The signature operation itself is executed
+            inside the secure element, ensuring both the integrity of the
+            seignature and the confidentiality of the key used in this process.
+            For instance, this could be used by an eMail application to sign
+            emails sent by the user. Or by a government web application to sign
+            a online administative request.
+          </li>
+          <li>
+            <strong>Payment:</strong> Online commerce may use widely used smart
+            credit cards, or specific payment applications, to enforce the
+            security of online transactions. On cellular telephony environment,
+            the on-card payment application may be hosted on the SIM card,
+            alleviating the need for the user to handle mulitple physical
+            devices.
+          </li>
+          <li>
+            <strong>Credential provisioning:</strong> The content of a secure
+            element may be updated to install, update or remove an application
+            or any credential it may host. For instance a public transport
+            application may offer a user to credit her NFC-enabled transport
+            card with tickets bought online. Or a corporate intranet web
+            application may offer employees to renew online the X.509
+            certificates hosted in their corporate badge, so that they can do
+            this operation from anywhere as soon as these certificates are
+            ready to expire.
+          </li>
+        </ul>
+        <p>
+          Whatever the form factor listed above, secure element considered in
+          this specification implement the same [[!ISO7816-4]] transport
+          protocol. The physical media (USB, NFC, or any other wired or
+          wireless technique) used in this communication is abstracted by the
+          API defined in this specification.
+        </p>
+      </section><!-- Use Cases -->
+    </section><!-- Introduction -->
+    <!-- - - - - - - - - - - - - - Conformance  - - - - - - - - - - - - - - -->
+    <section id="conformance">
+      <p>
+        This specification defines conformance criteria that apply to a single
+        product: the <dfn>user agent</dfn> that implements the interfaces that
+        it contains.
+      </p>
+      <p>
+        Implementations that use ECMAScript to implement the APIs defined in
+        this specification MUST implement them in a manner consistent with the
+        ECMAScript Bindings defined in the Web IDL specification [[!WEBIDL]],
+        as this specification uses that specification and terminology.
+      </p>
+    </section><!-- Conformance -->
+    <!-- - - - - - - - - - - - - -  Dependencies  - - - - - - - - - - - - - -->
+    <section>
+      <h2>
+        Dependencies
+      </h2>
+      <p>
+        This specification depends on the following interfaces and concepts
+        defined in other specifications.
+      </p>
+      <p>
+        The following dependencies are defined in [[!HTML]]: <dfn><a href=
+        "http://www.whatwg.org/specs/web-apps/current-work/#event-handlers">event
+        handler</a></dfn>, <dfn><a href=
+        "http://www.whatwg.org/specs/web-apps/current-work/#origin">origin</a></dfn>.
+      </p>
+      <p>
+        The following dependencies are defined in [[!DOM4]]: the <dfn><a href=
+        "http://dom.spec.whatwg.org/#event"><code>Event</code></a></dfn> and
+        the <dfn><a href=
+        "http://dom.spec.whatwg.org/#promise"><code>Promise</code></a></dfn>
+        interfaces, the concepts of a <a href=
+        "http://dom.spec.whatwg.org/#concept-resolver"><dfn>resolver</dfn></a>,
+        <dfn><a href="http://dom.spec.whatwg.org/#concept-event-fire">fire an
+        event</a></dfn>.
+      </p>
+    </section><!-- Dependencies -->
+    <!-- - - - - - - - - - - - - - Security  - - - - - - - - - - - - - - - - -->
+    <section>
+      <h2>
+        Security and privacy considerations
+      </h2>
+      <p>
+        This API must be only exposed to trusted content
+      </p>
+      <p>
+        Access control to applications...
+      </p>
+      <p>
+        Secure UI...
+      </p>
+      <p>
+        End-to-end secure messaging...
+      </p>
+      <p>
+        ...
+      </p>
+    </section><!-- Security -->
+    <!-- - - - - - - - - - - - - -  Secure Element Services  - - - - - - - - - - -->
+    <section class="informative">
+      <h2>
+        Secure Element services
+      </h2>
+      <p>
+        Communication with a secure element is performed through a
+        <dfn>reader</dfn>, which unlike its name suggests it not only able to
+        read content from secure element, but also to write or send any
+        application specific command. Given the removal nature of many secure
+        elements, a reader may be empty, meaning that no secure element is
+        connected to this reader. For instance, a USB smart card reader may be
+        connected to a computer, but not smart card is inserted. Or a device
+        may support NFC interactions with secure elements, but none is in the
+        field. For this reason, the API provides a mean to query the list of
+        available readers, and for each of them if they are empty or if a
+        secure element is present. In addition, this specification defines
+        events that are triggered when a secure element is connected to a
+        reader, and also when it is disconnected.
+      </p>
+      <p>
+        Once a web application is informed that a reader has a connected secure
+        element, it can open a <dfn>session</dfn> with it. This will establish
+        the communication with the secure element, and provide a session object
+        to the web application. However a secure element is just an application
+        container, and the web application still needs to identify the
+        application with which it wants to communicate.
+      </p>
+      <p>
+        To this intent, the session object provides a mean to open a
+        <dfn>channel</dfn> with a specific secure element application. These
+        applications are uniquely identified by an <abbr title=
+        "Application Identifier">AID</abbr> (Application Identifier). The web
+        application runtime and the secure element may then perform some
+        internal security checking to ensure the web application is allowed to
+        connect to this secure element application. If authorized, the returned
+        channel object is the one providing the method to send commands to the
+        secure element application, and get the corresponding responses.
+      </p>
+      <p>
+        The above steps required to send a command to a secure element creates
+        a set of chained objects. A reader may have several opened sessions,
+        which may have several opened channels. Each object has a
+        <code>close()</code> method to release all ressources associated to the
+        target object, and invoke <code>close()</code> method on all underlying
+        objects in the chain.
+      </p>
+      <p>
+        FIGURE: graph of objects...
+      </p>
+    </section><!-- Secure Element Services -->
+    <!-- - - - - - - - - - - - Interface Navigator - - - - - - - - - -->
+    <section>
+      <h2>
+        <a>Navigator</a> Interface
+      </h2>
+      <p>
+        The <a>Navigator</a> exposes the secure element service.
+      </p>
+      <dl title="partial interface Navigator" class="idl">
+        <dt>
+          readonly attribute SecureElement secureElement
+        </dt>
+        <dd>
+          When getting the <dfn id=
+          "widl-Navigator-secureElement">secureElement</dfn> attribute, the
+          user agent MUST return the <a>SecureElement</a> object that provides
+          access to available secure element readers. If the user agent doesn't
+          support secure element features, it MUST then return
+          <code>null</code>.
+        </dd>
+      </dl>
+    </section><!-- Interface Navigator -->
+    <!-- - - - - - - - - - - - Interface SecureElement - - - - - - - - - -->
+    <section>
+      <h2>
+        <a>SecureElement</a> Interface
+      </h2>
+      <p>
+        The <a>SecureElement</a> interface provides access to secure element
+        readers, and is the source of events notifying the presence of secure
+        elements.
+      </p>
+      <dl title="interface SecureElement : EventTarget" class="idl">
+        <dt>
+          readonly attribute Reader[] readers
+        </dt>
+        <dd>
+          Array of secure element readers. The value is an empty array if no
+          reader is available. The value is null if the <code>close()</code>
+          method has been closed on this <a>SecureElement</a> object.
+        </dd>
+        <dt>
+          attribute EventHandler onsepresent
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          attribute EventHandler onsenotpresent
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          Promise&lsaquo;SecureElement&rsaquo; close()
+        </dt>
+        <dd>
+          ...
+        </dd>
+      </dl>
+    </section><!-- Interface SecureElement -->
+    <!-- - - - - - - - - - - - Interface Reader - - - - - - - - - -->
+    <section>
+      <h2>
+        <a>Reader</a> Interface
+      </h2>
+      <p>
+        The <a>Reader</a> interface provides ...
+      </p>
+      <dl title="interface Reader" class="idl">
+        <dt>
+          readonly attribute boolean isSEPresent
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          readonly attribute DOMString name
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          Promise&lsaquo;Session&rsaquo; openSession()
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          Promise&lsaquo;Reader&rsaquo; close()
+        </dt>
+        <dd>
+          ...
+        </dd>
+      </dl>
+    </section><!-- Interface Reader -->
+    <!-- - - - - - - - - - - - Interface Session - - - - - - - - - -->
+    <section>
+      <h2>
+        <a>Session</a> Interface
+      </h2>
+      <p>
+        The <a>Session</a> interface provides ...
+      </p>
+      <dl title="interface Session" class="idl">
+        <dt>
+          readonly attribute octet[] atr
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          Promise&lsaquo;Channel&rsaquo; openBasicChannel()
+        </dt>
+        <dd>
+          ...
+          <dl class='parameters'>
+            <dt>
+              octet[] aid
+            </dt>
+            <dd>
+              The Application Identifier of the application to which a channel
+              should be opened.
+            </dd>
+          </dl>
+        </dd>
+        <dt>
+          Promise&lsaquo;Channel&rsaquo; openLogicalChannel()
+        </dt>
+        <dd>
+          ...
+          <dl class='parameters'>
+            <dt>
+              octet[] aid
+            </dt>
+            <dd>
+              The Application Identifier of the application to which a channel
+              should be opened.
+            </dd>
+          </dl>
+        </dd>
+        <dt>
+          Promise&lsaquo;Session&rsaquo; close()
+        </dt>
+        <dd>
+          ...
+        </dd>
+      </dl>
+    </section><!-- Interface Session -->
+    <!-- - - - - - - - - - - - Interface Channel - - - - - - - - - -->
+    <section>
+      <h2>
+        <a>Channel</a> Interface
+      </h2>
+      <p>
+        The <a>Channel</a> interface provides ...
+      </p>
+      <dl title="interface Channel" class="idl">
+        <dt>
+          readonly attribute boolean isBasicChannel
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          Promise&lsaquo;SEResponse&rsaquo; transmit()
+        </dt>
+        <dd>
+          ...
+          <dl class='parameters'>
+            <dt>
+              SECommand cmd
+            </dt>
+            <dd>
+              The command to send to the secure element application
+            </dd>
+          </dl>
+        </dd>
+        <dt>
+          Promise&lsaquo;Channel&rsaquo; close()
+        </dt>
+        <dd>
+          ...
+        </dd>
+      </dl>
+    </section><!-- Interface Channel -->
+    <!-- - - - - - - - - - - - Interface SECommand - - - - - - - - - -->
+    <section>
+      <h2>
+        <a>SECommand</a> Interface
+      </h2>
+      <p>
+        The <a>SECommand</a> interface provides ...
+      </p>
+      <dl title=
+      "[Constructor(octet data, octet ins, octet p1, octet p2, optional ArrayOfOctects data, optional octet le)] interface SECommand"
+      class="idl">
+        <dt>
+          attribute octet cla
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          attribute octet ins
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          attribute octet p1
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          attribute octet p2
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          attribute octet[] data
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          attribute unsigned short le
+        </dt>
+        <dd>
+          ...
+        </dd>
+      </dl>
+    </section><!-- Interface SECommand -->
+    <!-- - - - - - - - - - - - Interface SEResponse - - - - - - - - - -->
+    <section>
+      <h2>
+        <a>SEResponse</a> Interface
+      </h2>
+      <p>
+        The <a>SEResponse</a> interface provides ...
+      </p>
+      <dl title="[Constructor(ArrayOfOctects raw)] interface SEResponse" class=
+      "idl">
+        <dt>
+          readonly attribute octet sw1
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          readonly attribute octet sw2
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          readonly attribute octet[] data
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
+          boolean isStatus()
+        </dt>
+        <dd>
+          <dl class='parameters'>
+            <dt>
+              octet sw1
+            </dt>
+            <dd>
+              First octet of response status word
+            </dd>
+            <dt>
+              octet sw2
+            </dt>
+            <dd>
+              Second octet of response status word
+            </dd>
+          </dl>
+        </dd>
+      </dl>
+    </section><!-- Interface SEResponse -->
+    <!-- - - - - - - - - - - - - -  SEError - - - - - - - - - - - - - - - - -->
+    <section>
+      <h2>
+        The <code>SEError</code> enum
+      </h2>
+      <p>
+        In the interfaces defined above, some method return a <a>Promise</a>
+        object. If an error occurs during the execution of any of these
+        methods, the catch method of the promise object will be invoked with an
+        error value of the type <a>SEError</a>:
+      </p>
+      <dl title="enum SEError" class="idl">
+        <dt>
+          unknown
+        </dt>
+        <dd>
+          Internal error, no further details available
+        </dd>
+        <dt>
+          io
+        </dt>
+        <dd>
+          Communication error
+        </dd>
+        <dt>
+          security
+        </dt>
+        <dd>
+          A security condition was not fulfilled
+        </dd>
+        <dt>
+          invalid_state
+        </dt>
+        <dd>
+          The target object was not in the proper state to execute the
+          operation
+        </dd>
+        <dt>
+          invalid_value
+        </dt>
+        <dd>
+          The method was invoked with an incorrect parameter value
+        </dd>
+        <dt>
+          no_channel
+        </dt>
+        <dd>
+          Tentative to open a channel (basic or logical) failed because no
+          channel is available
+        </dd>
+      </dl>
+    </section><!-- SEError -->
+    <!-- - - - - - - - - - - - - -  Examples  - - - - - - - - - - - - - - - - -->
+    <section>
+      <h2>
+        Code example
+      </h2>
+      <p>
+        The javascript code excerpt below shows how a web application can wait
+        for a card to be present, and send it an APDU command:
+      </p>
+      <pre class="example highlight">
+
+            // my application identifier
+            var myAppId = ...;
+            // my application command
+            var myAppCmd = new SECommand(...);
+            
+            // get secure element object
+            var se = navigator.secureElement;
+            
+            // register sepresent event handler
+            se.onsepresent = function(reader) {
+            
+              // open session
+              reader.openSession()
+              .then(
+
+                function (session) {
+                  // open a basic channel to my application
+                  return session.openBasicChannel(myAppID);
+                }
+
+              ).then(
+
+                function (channel) {
+                  // open a basic channel to my application
+                  return channel.transmit(myAppCmd);
+                }
+
+              ).then(
+
+                function (response) {
+                  if (!response.isStatus(0x90, 0x00) {
+                    // this might be an error
+                    // ...
+                  }
+                }
+
+              );
+            };
+
+</pre>
+      <p>
+        For simplicity and readability reasons, the code above omits the error
+        handling and closing operations that would have to be done in a real
+        web application.
+      </p>
+    </section><!-- Examples -->
+    <!-- - - - - - - - - - - - - -  Changes - - - - - - - - - - - - - - - - -->
+    <section class="appendix" id="Changes">
+      <h2>
+        Changes
+      </h2>
+      <p>
+        The complete list of changes can be viewed on <a href=
+        "https://github.com/opoto/secure-element/commits/gh-pages">Github</a>.
+        You can also check the <a href=
+        "https://github.com/opoto/secure-element/issues">issues</a>.
+      </p>
+    </section>
+    <!-- - - - - - - - - - - - - - Acknowledgements - - - - - - - - - - - - - - -->
+    <section>
+      <h2>
+        Acknowledgements
+      </h2>
+      <p>
+        Thanks
+      </p>
+    </section>
+  </body>
+</html>
