@@ -21,7 +21,7 @@ See [contributing.md](contributing.md)
 
  * [SIM Alliance: Open Mobile API](http://www.simalliance.org/en/resources/specifications/)
  * [Seek-For-Android](https://code.google.com/p/seek-for-android/)
- * [Windows Phone](http://msdn.microsoft.com/en-US/library/windowsphone/develop/microsoft.phone.secureelement(v=vs.105).aspx)
+ * [Windows Phone](http://msdn.microsoft.com/en-US/library/windowsphone/develop/microsoft.phone.secureelement\(v=vs.105\).aspx)
  * [BlackBerry](http://developer.blackberry.com/native/documentation/core/com.qnx.doc.nfc/topic/manual/t_nfcdevguide_connect_app_on_SIM_SE.html)
  * [Tizen](https://developer.tizen.org/help/index.jsp?topic=/org.tizen.web.device.apireference/tizen/se.html)
  * [Webinos](http://dev.webinos.org/deliverables/wp3/Deliverable34/secureelements.html)
