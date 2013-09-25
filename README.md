@@ -10,7 +10,9 @@ The Secure Element API itself is specified in
 
 # How to contribute?
 
-See [contributing.md](contributing.md)
+Every one is welcome to contribute to this specification. You are invited to post suggestions or comments to the [SysApps mailing list](http://lists.w3.org/Archives/Public/public-sysapps) at the W3C, or open issues in this GitHub project. We also welcome editorial proposals though GitHub Pull Request.
+
+Note: The System Applications Working Group operates under the W3C Patent Policy which aims to enable implementations of W3C Recommendations without the need to pay royalty fees. If you want to make contributions that can be used in normative parts of our specifications, we require you to make the appropriate licensing commitments. Instructions on how to do so can be found here:
 
 # Useful links
 
