@@ -14,6 +14,8 @@ Every one is welcome to contribute to this specification. You are invited to pos
 
 Note: The System Applications Working Group operates under the W3C Patent Policy which aims to enable implementations of W3C Recommendations without the need to pay royalty fees. If you want to make contributions that can be used in normative parts of our specifications, we require you to make the appropriate licensing commitments. Instructions on how to do so can be found here:
 
+http://www.w3.org/2004/01/pp-impl/58119/status
+
 # Useful links
 
  * The SysApps WG homepage: http://www.w3.org/2012/sysapps/
