@@ -37,7 +37,7 @@
           // previousMaturity:  "WD",
 
           // if there a publicly available Editor's Draft, this is the link
-          edDraftURI:           "https://opoto.github.io/secure-element",
+          edDraftURI:           "http://opoto.github.io/secure-element",
 
           // if this is a LCWD, uncomment and set the end of its review period
           // lcEnd: "2009-08-05",
@@ -75,8 +75,8 @@
           // !!!! IMPORTANT !!!! MAKE THE ABOVE BLINK IN YOUR HEAD
 
           localBiblio:  {
-            "ISO7816-4": "<cite>Identification cards -- Integrated circuit cards -- Part 4: Organization, security and commands for interchange.</cite> ISO/IEC 7816-4:2013. URL:  <a href='http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550'>http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550</a>.",
-            "ISO7816-4zz": {
+            "ISO7816-4": "<cite>Identification cards -- Integrated circuit cards -- Part 4: Organization, security and commands for interchange.</cite> ISO/IEC 7816-4:2013. URL:  <a href='http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550'>http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550</a>."
+            , "ISO7816-4zz": {
                     title:    "ISO/IEC 7816-4 Identification cards -- Integrated circuit cards -- Part 4: Organization, security and commands for interchange"
                 ,   href:     "http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550"
                 //,   authors:  [
@@ -85,8 +85,32 @@
                 //    ]
                 ,   publisher:  "ISO"
                 ,   status:   "Published"
-                }
             }
+            , "WEBCRYPTO": {
+                    title:    "Web Cryptography API"
+                ,   href:     "http://www.w3.org/TR/WebCryptoAPI/"
+                ,   authors:  [ "W3C Web Cryptography Working Group" ]
+                ,   publisher:  "W3C"
+                }
+            , "NFC": {
+                    title:    "Web NFC API"
+                ,   href:     "http://htmlpreview.github.io/?https://github.com/w3c/nfc/blob/master/proposals/common/nfc.html"
+                ,   authors:  [ "W3C Near Field Communications (NFC) Working Group" ]
+                ,   publisher:  "W3C"
+                }
+            , "SYSAPPS": {
+                    title:    "Runtime and Security Model for Web Applications"
+                ,   href:     "http://www.w3.org/TR/runtime/"
+                ,   authors:  [ "W3C SysApps Working Group" ]
+                ,   publisher:  "W3C"
+                }
+            , "GP": {
+                    title:    "Card specifications"
+                ,   authors:  [ "GlobalPlatform" ]
+                ,   href:     "http://www.globalplatform.org/specificationscard.asp"
+                ,   publisher:  "GlobalPlatform"
+                }
+          }
       };
     </script>
   </head>
@@ -109,7 +133,7 @@
     <section id="sotd">
       <p>
         <strong>This work-in-progress specification is un unofficial draft.
-        Developpers are strongly discouraged to implement it at this
+        Developers are strongly discouraged to implement it at this
         stage.</strong> If you are interested in implementing or using this
         API, we encourage you to contact the editors or post on the working
         group <a href=
@@ -191,7 +215,7 @@
           Use Cases
         </h2>
         <p>
-          This specification allows developement of web applications making use
+          This specification allows development of web applications making use
           of these secure element applications. Some typical use cases for this
           API include:
         </p>
@@ -211,17 +235,17 @@
             element to digitally sign a document or any data with a key stored
             in this secure element. The signature operation itself is executed
             inside the secure element, ensuring both the integrity of the
-            seignature and the confidentiality of the key used in this process.
+            signature and the confidentiality of the key used in this process.
             For instance, this could be used by an eMail application to sign
             emails sent by the user. Or by a government web application to sign
-            a online administative request.
+            a online administrative request.
           </li>
           <li>
             <strong>Payment:</strong> Online commerce may use widely used smart
             credit cards, or specific payment applications, to enforce the
             security of online transactions. On cellular telephony environment,
             the on-card payment application may be hosted on the SIM card,
-            alleviating the need for the user to handle mulitple physical
+            alleviating the need for the user to handle multiple physical
             devices.
           </li>
           <li>
@@ -244,6 +268,39 @@
           API defined in this specification.
         </p>
       </section><!-- Use Cases -->
+      <!-- - - - - - - - - - - - - -  Relationship to other W3C APIs - - - - - - - - - - - - - -->
+      <section>
+        <h2>
+          Relationship to other W3C APIs
+        </h2>
+        <p>
+          This specification, although addressing some concepts similar to
+          other W3C specifications, has distinct use cases and offer different
+          level of services:
+        </p>
+        <ul>
+          <li>The current NFC API draft specification [[NFC]] defines an API
+          allowing to exchange NDEF messages with NFC tags or peers. While the
+          Secure Element API specified herein allows to send commands to secure
+          elements wired or plugged in the device, or wirelessly connected to
+          the device thanks to NFC technology. The difference between the
+          different communication links (wired or NFC) is only visible through
+          secure element type in this API, but does not impact the way applications
+          would interact with the secure element. As such there is no overlap
+          of functionalities between the two APIs.
+          </li>
+          <li>The Web Cryptography API draft specification [[WEBCRYPTO]]
+          defines an API allowing a web application to invoke cryptographic
+          services. Its implementation is independent from the underlying
+          layers performing the actual cryptographic operations: it might be
+          pure software, or use a dedicated hardware such as a secure element
+          or a TPM. As such there is not overlap between the two APIs.
+          Nevertheless one can imagine that the User Agent implementing the Web
+          Cryptography API may rely on the Secure Element API, but this will be
+          implementation dependent.
+          </li>
+        </ul>
+      </section><!-- Relationship to other W3C APIs -->
     </section><!-- Introduction -->
     <!-- - - - - - - - - - - - - - Conformance  - - - - - - - - - - - - - - -->
     <section id="conformance">
@@ -291,20 +348,57 @@
         Security and privacy considerations
       </h2>
       <p>
-        This API must be only exposed to trusted content
+        Using a secure element may bring additional security to a web
+        application, but is not sufficient to ensure the application is secure.
+        In particular, developers using the Secure Element API should be aware
+        of the following security considerations:
       </p>
-      <p>
-        Access control to applications...
-      </p>
-      <p>
-        Secure UI...
-      </p>
-      <p>
-        End-to-end secure messaging...
-      </p>
-      <p>
-        ...
-      </p>
+      <ul>
+        <li>
+          <strong>Communication</strong> between the secure element and the web
+          application has to be secured, in order to ensure that confidential
+          information exchanged with the secure element cannot be disclosed to
+          other applications, not data be modified during the transport. This
+          can either be achieved if the web application using the secure
+          element API executes in a trusted execution environment offering
+          guarantees on the integrity and confidentiality of the communication
+          link. Or it can be provided programmatically by encryption and/or
+          MACing of the messages exchanged with the secure element (e.g. using
+          GlobalPlatform's secure messaging technology [[GP]]). The off-card
+          processing of these messages has then to be done in a trusted
+          execution environment, which may be on the device to which the secure
+          element is connected, or on a remote device (e.g. the web
+          application's originating server).
+        </li>
+        <li>
+          <strong>Interface</strong> between the user and the web application
+          typically consists in displayed text and images (e.g. a transaction
+          confirmation dialog), and user inputs (e.g. a PIN code). The herein
+          specification does not offer any help to make sure this interface is
+          not compromised. If the application requires such guarantee, it
+          should restrict its execution on Trusted Execution Environments.
+        </li>
+        <li>
+          <strong>Access</strong> to secure element applications may be
+          restricted to authorized parties. The secure element embedded
+          application my enforce such control by requiring authentication of
+          the off-card communicating party. Some implementation of this control
+          may required cooperation of the web application runtime: for instance
+          the GlobalPlatform access control mechanism [[GP]] requires the
+          runtime to send the off-card application signature to the secure
+          element for the latter to verify if it is authorized or not. These
+          controls are out of scope of the herein specification.
+        </li>
+        <li>
+          <strong>Trackability</strong> of the user may be facilitated by the
+          unique identifying information the secure element may contain. In
+          addition to the access control implemented by the card, the web
+          application runtime should make sure that only trusted applications
+          (signed by a trusted party, as defined by the [[SYSAPPS]]) have
+          access to the secure element API, and user has to explicitly consent
+          to the allow this application to execute.
+        </li>
+      </ul>
     </section><!-- Security -->
     <!-- - - - - - - - - - - - - -  Secure Element Services  - - - - - - - - - - -->
     <section class="informative">
@@ -353,9 +447,14 @@
         target object, and invoke <code>close()</code> method on all underlying
         objects in the chain.
       </p>
-      <p>
-        FIGURE: graph of objects...
-      </p>
+      <figure>
+        <a href="#class-graph"><img src="images/class-graph.png" alt=
+        "Class graph"></a>
+        <figcaption id="class-graph">
+          The figure above represents the class relationships between the
+          secure element entities introduced in this specification.
+        </figcaption>
+      </figure>
     </section><!-- Secure Element Services -->
     <!-- - - - - - - - - - - - Interface Navigator - - - - - - - - - -->
     <section>
@@ -367,14 +466,14 @@
       </p>
       <dl title="partial interface Navigator" class="idl">
         <dt>
-          readonly attribute SecureElement secureElement
+          readonly attribute SecureElementManager secureElementManager
         </dt>
         <dd>
           When getting the <dfn id=
-          "widl-Navigator-secureElement">secureElement</dfn> attribute, the
-          user agent MUST return the <a>SecureElement</a> object that provides
-          access to available secure element readers. If the user agent doesn't
-          support secure element features, it MUST then return
+          "widl-Navigator-secureElement">secureElementManager</dfn> attribute,
+          the user agent MUST return the <a>SecureElementManager</a> object
+          that provides access to available secure element readers. If the user
+          agent doesn't support secure element features, it MUST then return
           <code>null</code>.
         </dd>
       </dl>
@@ -382,21 +481,21 @@
     <!-- - - - - - - - - - - - Interface SecureElement - - - - - - - - - -->
     <section>
       <h2>
-        <a>SecureElement</a> Interface
+        <a>SecureElementManager</a> Interface
       </h2>
       <p>
-        The <a>SecureElement</a> interface provides access to secure element
-        readers, and is the source of events notifying the presence of secure
-        elements.
+        The <a>SecureElementManager</a> interface provides access to secure
+        element readers, and is the source of events notifying the presence of
+        secure elements.
       </p>
-      <dl title="interface SecureElement : EventTarget" class="idl">
+      <dl title="interface SecureElementManager : EventTarget" class="idl">
         <dt>
           readonly attribute Reader[] readers
         </dt>
         <dd>
           Array of secure element readers. The value is an empty array if no
           reader is available. The value is null if the <code>close()</code>
-          method has been closed on this <a>SecureElement</a> object.
+          method has been closed on this <a>SecureElementManager</a> object.
         </dd>
         <dt>
           attribute EventHandler onsepresent
@@ -411,13 +510,13 @@
           ...
         </dd>
         <dt>
-          Promise&lsaquo;SecureElement&rsaquo; close()
+          Promise&lsaquo;SecureElementManager&rsaquo; close()
         </dt>
         <dd>
           ...
         </dd>
       </dl>
-    </section><!-- Interface SecureElement -->
+    </section><!-- Interface SecureElementManager -->
     <!-- - - - - - - - - - - - Interface Reader - - - - - - - - - -->
     <section>
       <h2>
@@ -440,6 +539,12 @@
           ...
         </dd>
         <dt>
+          readonly attribute SecureElementType type
+        </dt>
+        <dd>
+          ...
+        </dd>
+        <dt>
           Promise&lsaquo;Session&rsaquo; openSession()
         </dt>
         <dd>
@@ -452,6 +557,54 @@
           ...
         </dd>
       </dl>
+      <!-- - - - - - - - - - - - Enum SecureElementType - - - - - - - - - -->
+      <section>
+        <h2>
+          <a>SecureElementType</a> enum
+        </h2>
+        <p>
+          The <a>SecureElementType</a> enum identifies the type of the secure element a reader gives access to.
+        </p>
+        <dl title="enum SecureElementType" class="idl">
+        <dt>
+          embedded
+        </dt>
+        <dd>
+          The secure element is physically wired to the device, and cannot be removed.
+        </dd>
+        <dt>
+          uicc
+        </dt>
+        <dd>
+          The secure element is a UICC used by the device to connect to a mobile network.
+        </dd>
+        <dt>
+          plugged
+        </dt>
+        <dd>
+          The secure element is plugged to the device, and can be unplugged.
+        </dd>
+        <dt>
+          sd
+        </dt>
+        <dd>
+          The secure element is a SD card, and may be unplugged.
+        </dd>
+        <dt>
+          nfc
+        </dt>
+        <dd>
+          The secure element is accessed though NFC, and can be disconnected.
+        </dd>
+        <dt>
+          other
+        </dt>
+        <dd>
+          For any other secure element type not listed above.
+        </dd>
+      </dl>
+
+      </section><!-- Enum SecureElementType -->
     </section><!-- Interface Reader -->
     <!-- - - - - - - - - - - - Interface Session - - - - - - - - - -->
     <section>
@@ -709,11 +862,11 @@
             // my application command
             var myAppCmd = new SECommand(...);
             
-            // get secure element object
-            var se = navigator.secureElement;
+            // get secure element manager
+            var seMgr = navigator.secureElementManager;
             
             // register sepresent event handler
-            se.onsepresent = function(reader) {
+            seMgr.onsepresent = function(reader) {
             
               // open session
               reader.openSession()
