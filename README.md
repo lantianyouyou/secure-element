@@ -6,7 +6,7 @@ This is a unofficial draft for the Secure Element API
 # What's in here? 
 
 The Secure Element API itself is specified in 
-[index.html](https://github.com/opoto/secure-element/blob/gh-pages/index.html).
+[index.html](https://github.com/opoto/secure-element/blob/gh-pages/index.html). Read it [here](http://opoto.github.io/secure-element).
 
 # How to contribute?
 
