@@ -75,41 +75,55 @@
           // !!!! IMPORTANT !!!! MAKE THE ABOVE BLINK IN YOUR HEAD
 
           localBiblio:  {
-            "ISO7816-4": "<cite>Identification cards -- Integrated circuit cards -- Part 4: Organization, security and commands for interchange.</cite> ISO/IEC 7816-4:2013. URL:  <a href='http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550'>http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550</a>."
-            , "ISO7816-4zz": {
-                    title:    "ISO/IEC 7816-4 Identification cards -- Integrated circuit cards -- Part 4: Organization, security and commands for interchange"
-                ,   href:     "http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550"
-                //,   authors:  [
-                //        "Dominique Hazael-Massieux"
-                //    ,   "Doug the Simple Villager"
-                //    ]
+            "dummy" : "dummy"
+            , "ETSI-102216": {
+                    title:    "TR 102 216 : Smart cards; Vocabulary for Smart Card Platform specifications"
+                ,   href:     "http://webapp.etsi.org/workprogram/Report_WorkItem.asp?WKI_ID=18815&curItemNr=1&totalNrItems=1&optDisplay=10&qSORT=HIGHVERSION&qETSI_STANDARD_TYPE=%27TR%27&qETSI_NUMBER=102+216"
+                ,   authors:  [ "ETSI" ]
+                ,   publisher:  "ETSI"
+              }
+            , "ISO7816-3": {
+                    title:    "7816-3 Identification cards -- Integrated circuit cards -- Part 3: Cards with contacts -- Electrical interface and transmission protocols"
+                ,   href:     "http://www.iso.org/iso/fr/home/store/catalogue_tc/catalogue_detail.htm?csnumber=38770"
+                ,   authors:  [ "ISO/IEC" ]
                 ,   publisher:  "ISO"
-                ,   status:   "Published"
-            }
+              }
+            , "ISO7816-4": {
+                    title:    "7816-4 Identification cards -- Integrated circuit cards -- Part 4: Organization, security and commands for interchange"
+                ,   href:     "http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54550"
+                ,   authors:  [ "ISO/IEC" ]
+                ,   publisher:  "ISO"
+              }
+            , "ISO7816-5": {
+                    title:    "7816-5 Identification cards -- Integrated circuit cards -- Part 5: Registration of application providers"
+                ,   href:     "http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=34259"
+                ,   authors:  [ "ISO/IEC" ]
+                ,   publisher:  "ISO"
+              }
             , "WEBCRYPTO": {
                     title:    "Web Cryptography API"
                 ,   href:     "http://www.w3.org/TR/WebCryptoAPI/"
                 ,   authors:  [ "W3C Web Cryptography Working Group" ]
                 ,   publisher:  "W3C"
-                }
+              }
             , "NFC": {
                     title:    "Web NFC API"
                 ,   href:     "http://htmlpreview.github.io/?https://github.com/w3c/nfc/blob/master/proposals/common/nfc.html"
                 ,   authors:  [ "W3C Near Field Communications (NFC) Working Group" ]
                 ,   publisher:  "W3C"
-                }
+              }
             , "SYSAPPS": {
                     title:    "Runtime and Security Model for Web Applications"
                 ,   href:     "http://www.w3.org/TR/runtime/"
                 ,   authors:  [ "W3C SysApps Working Group" ]
                 ,   publisher:  "W3C"
-                }
+              }
             , "GP": {
                     title:    "Card specifications"
                 ,   authors:  [ "GlobalPlatform" ]
                 ,   href:     "http://www.globalplatform.org/specificationscard.asp"
                 ,   publisher:  "GlobalPlatform"
-                }
+              }
           }
       };
     </script>
@@ -124,8 +138,8 @@
         integrity and confidentiality of its content.
       </p>
       <p>
-        This specification defines an API to interact with secure elements, in
-        an application agnostic way. It makes no assumption on the secure
+        This specification defines a communication interface between a web
+        application and a secure element. It makes no assumption on the secure
         element type, application domain, or physical communication media.
       </p>
     </section>
@@ -165,7 +179,7 @@
           that may come in different form factors, such as:
         </p>
         <ul>
-          <li>Smart cards. The chip in embedded in a plastic card usually of
+          <li>Smart cards. The chip is embedded in a plastic card usually of
           the size of a typical credit card. The card may show physical
           contacts to communicate with the chip, or the chip may support
           <abbr title="Near Field Communication">NFC</abbr> (Near Field
@@ -173,9 +187,12 @@
           Some cards also support both communication methods.
           </li>
           <li>
-            <abbr title="Subscriber Identity Module">SIM</abbr>/<abbr title=
-            "User Identification...">UICC</abbr> cards are smart cards used in
-            cellular telephony, which may be delivered in different sizes.
+            <abbr title="Universal Integrated Circuit Card"><a>UICC</a></abbr>
+            cards are smart cards used in cellular telephony, which may be
+            delivered in different sizes. They are often called <abbr title=
+            "Subscriber Identity Module">SIM</abbr>, which is actually the name
+            of the application hosted by the <a>UICC</a> to access GSM
+            networks. <a>UICC</a> may however host other applications.
           </li>
           <li>Smart <abbr title="Storage Device">SD</abbr> cards have a similar
           form as usual SD cards, but internally include a secure element, and
@@ -205,7 +222,7 @@
           resources. Examples of <dfn>off-card</dfn> applications are
           <abbr title="Automatic Toll Machines">ATM</abbr> for payment, mail
           applications for signature, access control doors for authentication,
-          etc. This specification defines the API to use by off-card
+          etc. This specification defines the API to be used by off-card
           applications based on web technologies.
         </p>
       </section><!-- Technical Background -->
@@ -216,8 +233,8 @@
         </h2>
         <p>
           This specification allows development of web applications making use
-          of these secure element applications. Some typical use cases for this
-          API include:
+          of these secure element applications. Some typical use cases that
+          applications can address based on this API include:
         </p>
         <ul>
           <li>
@@ -256,8 +273,7 @@
             card with tickets bought online. Or a corporate intranet web
             application may offer employees to renew online the X.509
             certificates hosted in their corporate badge, so that they can do
-            this operation from anywhere as soon as these certificates are
-            ready to expire.
+            this operation from anywhere just before these certificates expire.
           </li>
         </ul>
         <p>
@@ -281,13 +297,13 @@
         <ul>
           <li>The current NFC API draft specification [[NFC]] defines an API
           allowing to exchange NDEF messages with NFC tags or peers. While the
-          Secure Element API specified herein allows to send commands to secure
-          elements wired or plugged in the device, or wirelessly connected to
-          the device thanks to NFC technology. The difference between the
-          different communication links (wired or NFC) is only visible through
-          secure element type in this API, but does not impact the way applications
-          would interact with the secure element. As such there is no overlap
-          of functionalities between the two APIs.
+          Secure Element API specified herein allows web applications to send
+          commands to secure elements wired or plugged in the device, or
+          wirelessly connected to the device thanks to NFC technology. The
+          difference between the different communication links (wired or NFC)
+          is only visible through secure element type in this API, but does not
+          impact the way applications would interact with the secure element.
+          As such there is no overlap of functionalities between the two APIs.
           </li>
           <li>The Web Cryptography API draft specification [[WEBCRYPTO]]
           defines an API allowing a web application to invoke cryptographic
@@ -341,9 +357,32 @@
         <dfn><a href="http://dom.spec.whatwg.org/#concept-event-fire">fire an
         event</a></dfn>.
       </p>
+      <p>
+        Some secure element concepts are defined in ISO/IEC specifications:
+      </p>
+      <ul>
+        <li>
+          <dfn>Answer to Reset</dfn> (<dfn>ATR</dfn>) is defined in
+          [[!ISO7816-3]]
+        </li>
+        <li>
+          <dfn>APDU command</dfn>, <dfn>APDU response</dfn>, <dfn>class
+          byte</dfn>, <dfn>instruction byte</dfn>, <dfn>parameter bytes</dfn>,
+          <dfn>data field bytes</dfn>, <dfn>status word</dfn>, <dfn>basic
+          channel</dfn> and <dfn>logical channel</dfn> are defined in
+          [[!ISO7816-4]]
+        </li>
+        <li>
+          <dfn>Application Identifier</dfn> (<dfn>AID</dfn>) is defined in
+          [[!ISO7816-5]].
+        </li>
+        <li>
+          <dfn>UICC</dfn> is defined in [[!ETSI-102216]]
+        </li>
+      </ul>
     </section><!-- Dependencies -->
     <!-- - - - - - - - - - - - - - Security  - - - - - - - - - - - - - - - - -->
-    <section>
+    <section class="informative">
       <h2>
         Security and privacy considerations
       </h2>
@@ -356,14 +395,13 @@
       <ul>
         <li>
           <strong>Communication</strong> between the secure element and the web
-          application has to be secured, in order to ensure that confidential
-          information exchanged with the secure element cannot be disclosed to
-          other applications, not data be modified during the transport. This
-          can either be achieved if the web application using the secure
-          element API executes in a trusted execution environment offering
-          guarantees on the integrity and confidentiality of the communication
-          link. Or it can be provided programmatically by encryption and/or
-          MACing of the messages exchanged with the secure element (e.g. using
+          application has to be secured, in order to ensure to ensure the
+          confidentiality and integrity of the message exchange. This can
+          either be achieved if the web application using the secure element
+          API executes in a trusted execution environment offering guarantees
+          on the integrity and confidentiality of the communication link. Or it
+          can be provided programmatically by encryption and/or MACing of the
+          messages exchanged with the secure element (e.g. using
           GlobalPlatform's secure messaging technology [[GP]]). The off-card
           processing of these messages has then to be done in a trusted
           execution environment, which may be on the device to which the secure
@@ -373,30 +411,30 @@
         <li>
           <strong>Interface</strong> between the user and the web application
           typically consists in displayed text and images (e.g. a transaction
-          confirmation dialog), and user inputs (e.g. a PIN code). The herein
-          specification does not offer any help to make sure this interface is
-          not compromised. If the application requires such guarantee, it
-          should restrict its execution on Trusted Execution Environments.
+          confirmation dialog), and user inputs (e.g. a PIN code). Protecting
+          this interface is out of the scope of this specification. If the
+          application requires such guarantee, it should restrict its execution
+          on Trusted Execution Environments.
         </li>
         <li>
-          <strong>Access</strong> to secure element applications may be
+          <strong>Access</strong> to secure element applications should be
           restricted to authorized parties. The secure element embedded
-          application my enforce such control by requiring authentication of
+          application may enforce such control by requiring authentication of
           the off-card communicating party. Some implementation of this control
-          may required cooperation of the web application runtime: for instance
-          the GlobalPlatform access control mechanism [[GP]] requires the
-          runtime to send the off-card application signature to the secure
+          may require the cooperation of the web application runtime: for
+          instance the GlobalPlatform access control mechanism [[GP]] requires
+          the runtime to send the off-card application signature to the secure
           element for the latter to verify if it is authorized or not. These
           controls are out of scope of the herein specification.
         </li>
         <li>
-          <strong>Trackability</strong> of the user may be facilitated by the
+          <strong>Traceability</strong> of the user may be facilitated by the
           unique identifying information the secure element may contain. In
           addition to the access control implemented by the card, the web
           application runtime should make sure that only trusted applications
           (signed by a trusted party, as defined by the [[SYSAPPS]]) have
-          access to the secure element API, and user has to explicitly consent
-          to the allow this application to execute.
+          access to the secure element API, and user has to explicitly allow
+          this application to execute.
         </li>
       </ul>
     </section><!-- Security -->
@@ -422,16 +460,17 @@
       </p>
       <p>
         Once a web application is informed that a reader has a connected secure
-        element, it can open a <dfn>session</dfn> with it. This will establish
-        the communication with the secure element, and provide a session object
-        to the web application. However a secure element is just an application
-        container, and the web application still needs to identify the
-        application with which it wants to communicate.
+        element, it can open a <dfn>session</dfn> with it. Opening a session
+        establishes the communication between the web application and the
+        secure element, and provides a session object to the application.
+        However a secure element is just an application container, and the web
+        application still needs to identify the application with which it wants
+        to communicate.
       </p>
       <p>
         To this intent, the session object provides a mean to open a
-        <dfn>channel</dfn> with a specific secure element application. These
-        applications are uniquely identified by an <abbr title=
+        <dfn>channel</dfn> with a specific secure element application, which is
+        uniquely identified by an <abbr title=
         "Application Identifier">AID</abbr> (Application Identifier). The web
         application runtime and the secure element may then perform some
         internal security checking to ensure the web application is allowed to
@@ -493,27 +532,98 @@
           readonly attribute Reader[] readers
         </dt>
         <dd>
-          Array of secure element readers. The value is an empty array if no
-          reader is available. The value is null if the <code>close()</code>
-          method has been closed on this <a>SecureElementManager</a> object.
+          This attribute MUST return the list of available readers in which a
+          secure element may be present. Its value MUST be an empty array if no
+          reader is available. It MUST be <code>null</code> if the
+          <code>close()</code> method has been closed on this
+          <a>SecureElementManager</a> object. Several requests of this
+          attribute MAY return a different array value, because new readers may
+          become available, while others may be disconnected.
         </dd>
         <dt>
           attribute EventHandler onsepresent
         </dt>
         <dd>
-          ...
+          Event handler for the sepresent event. This event MUST be triggered
+          each time any of the following situations occurs:
+          <ul>
+            <li>Application starts while a secure element is present in a
+            reader
+            </li>
+            <li>Application is running, a reader which was already listed in
+            the readers attribute but had no secure element now detects a
+            present secure element.
+            </li>
+            <li>Application is running, a new reader is detected and has a
+            secure element present.
+            </li>
+          </ul>
         </dd>
         <dt>
-          attribute EventHandler onsenotpresent
+          attribute EventHandler onseremoval
         </dt>
         <dd>
-          ...
+          Event handler for the seremoval event. This event MUST be triggered
+          when a secure element which was present in a reader is not present
+          anymore (it has been unplugged, or is out of reach if it was
+          connected through wireless communication).
         </dd>
         <dt>
           Promise&lsaquo;SecureElementManager&rsaquo; close()
         </dt>
         <dd>
-          ...
+          <div class="note" id="note-promise">
+            This APi makes extensive use of the <a>Promise</a> type for
+            asynchronous operations. Considering the instability of this type's
+            definition, we only give API description for
+            <code>SecureElementManager</code>'s <code>close()</code> method.
+            This will be complemented when <a>Promise</a> is stable.
+          </div>
+          <p>
+            This method closes all readers and descendent <a>Session</a> and
+            <a>Channel</a> objects. When invoked, the user agent MUST run the
+            following steps:
+          </p>
+          <ol>
+            <li>Let <var>countdown</var> be the number of readers in the <code>
+              readers</code> attribute, and <var>errors</var> an integer
+              initialized to 0.
+            </li>
+            <li>Invoke <code>close()</code> method on each <a>Reader</a> object
+            in the array returned by the <code>readers</code> attribute.
+            </li>
+            <li>Let <var>readerpromises</var> be the set of <a>Promise</a>
+            objects returned by these <code>close()</code> invocations.
+            </li>
+            <li>Set the <code>readers</code> attribute value to
+            <code>null</code>.
+            </li>
+            <li>Let <var>promise</var> be a new <a>Promise</a> object and <var>
+              resolver</var> its associated <code>resolver</code>.
+            </li>
+            <li>Return <var>promise</var> to the caller and continue the
+            following steps asynchronously.
+            </li>
+            <li>If <var>countdown</var> is 0, then invoke <var>resolver</var>'s
+            <code>accept()</code> method with this <a>SecureElementManager</a>
+            object, and exit those steps.
+            </li>
+            <li>When the <code>accept()</code> method of an element of
+            <var>readerpromises</var> set is invoked, <var>countdown</var> is
+            decremented. If <var>countdown</var> is 0 and <var>errors</var> is
+            0, then invoke <var>resolver</var>'s <code>accept()</code> method
+            with this <a>SecureElementManager</a> object. If
+            <var>countdown</var> is 0 and <var>errors</var> is greater than 0,
+            then invoke <var>resolver</var>'s <code>reject()</code> method with
+            an <a>SEError</a> object.
+            </li>
+            <li>When the <code>reject()</code> method of an element of
+            <var>readerpromises</var> set is invoked, <var>countdown</var> is
+            decremented, and <var>errors</var> is incremented. If
+            <var>countdown</var> is 0 then invoke <var>resolver</var>'s <code>
+              reject()</code> method with an <a>SEError</a> object.
+            </li>
+          </ol>
         </dd>
       </dl>
     </section><!-- Interface SecureElementManager -->
@@ -523,38 +633,69 @@
         <a>Reader</a> Interface
       </h2>
       <p>
-        The <a>Reader</a> interface provides ...
+        Readers connected to this device are accessible though the
+        <a>Reader</a> interface. A reader is the connector to a secure element.
+        Given the removable nature of some secure elements, a reader may or may
+        not have a secure element present. A reader may have at most one
+        present secure element simultaneously. A reader MAY for instance be a
+        <a>UICC</a> slot, a USB smart card reader, an NFC interface, or a
+        mother board slot where a embedded secure element is wired.
       </p>
       <dl title="interface Reader" class="idl">
         <dt>
           readonly attribute boolean isSEPresent
         </dt>
         <dd>
-          ...
+          This attribute MUST return true if a secure element is present in
+          this reader. It MUST return false otherwise.
         </dd>
         <dt>
           readonly attribute DOMString name
         </dt>
         <dd>
-          ...
+          This attribute MUST return the name of the reader. This is an
+          arbitrary name set by the system. It MAY be computed based on ready
+          provided data.
         </dd>
         <dt>
-          readonly attribute SecureElementType type
+          readonly attribute SecureElementType secureElementType
         </dt>
         <dd>
-          ...
+          This attribute MUST return the <a>SecureElementType</a> value best
+          matching the type of the secure element this reader gives access to.
+          This information may be useful for applications that target a
+          specific secure element type. It may also be used to build the
+          application user interface, to represent the secure element in a
+          realistic way.
+        </dd>
+        <dt>
+          readonly attribute ConnectivityType connectivityType
+        </dt>
+        <dd>
+          This attribute MUST return the <a>ConnectivityType</a> value matching
+          the connectivity used by the reader to communicate with the secure
+          element.
         </dd>
         <dt>
           Promise&lsaquo;Session&rsaquo; openSession()
         </dt>
         <dd>
-          ...
+          This method establishes a communication link with a secure element.
+          There may be several sessions opened at the same time, hence a
+          session MUST NOT lock access to the secure element.
+          <div class="note">
+            See <a href="#note-promise">note on <code>Promise</code></a>
+          </div>
         </dd>
         <dt>
           Promise&lsaquo;Reader&rsaquo; close()
         </dt>
         <dd>
-          ...
+          This method closes all sessions opened by this reader, and their
+          descendent <a>Channel</a> objects.
+          <div class="note">
+            See <a href="#note-promise">note on <code>Promise</code></a>
+          </div>
         </dd>
       </dl>
       <!-- - - - - - - - - - - - Enum SecureElementType - - - - - - - - - -->
@@ -563,48 +704,75 @@
           <a>SecureElementType</a> enum
         </h2>
         <p>
-          The <a>SecureElementType</a> enum identifies the type of the secure element a reader gives access to.
+          The <a>SecureElementType</a> enum identifies the type of the secure
+          element a reader gives access to.
         </p>
         <dl title="enum SecureElementType" class="idl">
-        <dt>
-          embedded
-        </dt>
-        <dd>
-          The secure element is physically wired to the device, and cannot be removed.
-        </dd>
-        <dt>
-          uicc
-        </dt>
-        <dd>
-          The secure element is a UICC used by the device to connect to a mobile network.
-        </dd>
-        <dt>
-          plugged
-        </dt>
-        <dd>
-          The secure element is plugged to the device, and can be unplugged.
-        </dd>
-        <dt>
-          sd
-        </dt>
-        <dd>
-          The secure element is a SD card, and may be unplugged.
-        </dd>
-        <dt>
-          nfc
-        </dt>
-        <dd>
-          The secure element is accessed though NFC, and can be disconnected.
-        </dd>
-        <dt>
-          other
-        </dt>
-        <dd>
-          For any other secure element type not listed above.
-        </dd>
-      </dl>
-
+          <dt>
+            uicc
+          </dt>
+          <dd>
+            The secure element is a <a>UICC</a> used by the device to connect
+            to a mobile network.
+          </dd>
+          <dt>
+            smartcard
+          </dt>
+          <dd>
+            The secure element is a smart card.
+          </dd>
+          <dt>
+            chip
+          </dt>
+          <dd>
+            The secure element is a dedicated chip in the device.
+          </dd>
+          <dt>
+            sd
+          </dt>
+          <dd>
+            The secure element is a SD card, and may be unplugged.
+          </dd>
+          <dt>
+            other
+          </dt>
+          <dd>
+            For any other secure element type not listed above.
+          </dd>
+        </dl>
       </section><!-- Enum SecureElementType -->
+      <!-- - - - - - - - - - - - Enum ConnectivityType - - - - - - - - - -->
+      <section>
+        <h2>
+          <a>ConnectivityType</a> enum
+        </h2>
+        <p>
+          The <a>ConnectivityType</a> enum identifies the type of the secure
+          element a reader gives access to.
+        </p>
+        <dl title="enum ConnectivityType" class="idl">
+          <dt>
+            embedded
+          </dt>
+          <dd>
+            The secure element is physically attached to the device, and cannot
+            be removed, at least without powering off the device.
+          </dd>
+          <dt>
+            plugged
+          </dt>
+          <dd>
+            The secure element is plugged to the device, and can be unplugged.
+          </dd>
+          <dt>
+            wireless
+          </dt>
+          <dd>
+            The secure element is accessed though wireless communication, such
+            as NFC. It can be disconnected.
+          </dd>
+        </dl>
+      </section><!-- Enum ConnectivityType -->
     </section><!-- Interface Reader -->
     <!-- - - - - - - - - - - - Interface Session - - - - - - - - - -->
     <section>
@@ -619,43 +787,64 @@
           readonly attribute octet[] atr
         </dt>
         <dd>
-          ...
+          This attribute MUST return the <a>Answer to Reset</a> (ATR) provided
+          by the secure element, or <code>null</code> if the secure element
+          does not provide an ATR.
         </dd>
         <dt>
           Promise&lsaquo;Channel&rsaquo; openBasicChannel()
         </dt>
         <dd>
-          ...
+          This methods opens a <a>basic channel</a> to communicate with a
+          secure element application. Once this channel has been opened by an
+          application, it is considered to be "locked" to other applications:
+          any other call to this method will fail until this <a>basic
+          channel</a> is closed. Some secure elements might always deny opening
+          a basic channel.
           <dl class='parameters'>
             <dt>
               octet[] aid
             </dt>
             <dd>
-              The Application Identifier of the application to which a channel
-              should be opened.
+              This parameter value MUST be the <a>Application Identifier</a> of
+              the target application on the secure element, or
+              <code>null</code> if this application is the default one.
             </dd>
           </dl>
+          <div class="note">
+            See <a href="#note-promise">note on <code>Promise</code></a>
+          </div>
         </dd>
         <dt>
           Promise&lsaquo;Channel&rsaquo; openLogicalChannel()
         </dt>
         <dd>
-          ...
+          This methods opens a <a>logical channel</a> to communicate with a
+          secure element application. It is up to the secure element to choose
+          which logical channel will be used.
           <dl class='parameters'>
             <dt>
               octet[] aid
             </dt>
             <dd>
-              The Application Identifier of the application to which a channel
-              should be opened.
+              This parameter value MUST be the <a>Application Identifier</a> of
+              the target application on the secure element, or
+              <code>null</code> if this application is the default one.
             </dd>
           </dl>
+          <div class="note">
+            See <a href="#note-promise">note on <code>Promise</code></a>
+          </div>
         </dd>
         <dt>
           Promise&lsaquo;Session&rsaquo; close()
         </dt>
         <dd>
-          ...
+          Closes the connection with the Secure Element. This will close any
+          channels opened by this application with this Secure Element.
+          <div class="note">
+            See <a href="#note-promise">note on <code>Promise</code></a>
+          </div>
         </dd>
       </dl>
     </section><!-- Interface Session -->
@@ -672,27 +861,66 @@
           readonly attribute boolean isBasicChannel
         </dt>
         <dd>
-          ...
+          This attribute must return TRUE if this channel is a <a>basic
+          channel</a>, it MUST return FALSE otherwise.
+        </dd>
+        <dt>
+          readonly attribute SEResponse openResponse
+        </dt>
+        <dd>
+          This attribute MUST return the secure element's response to the
+          channel opening operation. It MUST be <code>null</code> if the
+          channel was opened on the default secure element application (no AID
+          was provided in the open channel operation).
         </dd>
         <dt>
           Promise&lsaquo;SEResponse&rsaquo; transmit()
         </dt>
         <dd>
-          ...
+          <p>
+            This method transmits a command to the secure element. The user
+            agent MUST ensure the synchronisation between all the concurrent
+            calls to this method: a command must not be sent to a secure
+            element while a response is still pending on any channel from this
+            same secure element.
+          </p>
+          <p>
+            The channel information in the <a>class byte</a> in the <a>APDU
+            command</a> will be ignored. The system MAY modify the <a>class
+            byte</a> of the command to ensure the APDU is transported on this
+            channel. To ensure the invoking web application does not exit from
+            the scope of this channel, the user agent MUST reject the following
+            commands:
+          </p>
+          <ul>
+            <li>MANAGE_CHANNEL (INS=0x70)
+            </li>
+            <li>SELECT by DF Name (INS=0xA4 and P1=04)
+            </li>
+          </ul>
           <dl class='parameters'>
             <dt>
               SECommand cmd
             </dt>
             <dd>
-              The command to send to the secure element application
+              The command to send to the secure element application.
             </dd>
           </dl>
+          <div class="note">
+            See <a href="#note-promise">note on <code>Promise</code></a>
+          </div>
         </dd>
         <dt>
           Promise&lsaquo;Channel&rsaquo; close()
         </dt>
         <dd>
-          ...
+          This method closes this session object. If a transmit operation is
+          still waiting for the secure element response, the user agent must
+          terminate that asynchronous operation with a <code>closed</code>
+          error status.
+          <div class="note">
+            See <a href="#note-promise">note on <code>Promise</code></a>
+          </div>
         </dd>
       </dl>
     </section><!-- Interface Channel -->
@@ -702,7 +930,8 @@
         <a>SECommand</a> Interface
       </h2>
       <p>
-        The <a>SECommand</a> interface provides ...
+        The <a>SECommand</a> interface represents an <a>APDU command</a> that
+        can be sent to a secure element.
       </p>
       <dl title=
       "[Constructor(octet data, octet ins, octet p1, octet p2, optional ArrayOfOctects data, optional octet le)] interface SECommand"
@@ -711,37 +940,38 @@
           attribute octet cla
         </dt>
         <dd>
-          ...
+          <a>Class byte</a>
         </dd>
         <dt>
           attribute octet ins
         </dt>
         <dd>
-          ...
+          <a>Instruction byte</a>
         </dd>
         <dt>
           attribute octet p1
         </dt>
         <dd>
-          ...
+          First octet of the <a>parameter bytes</a>
         </dd>
         <dt>
           attribute octet p2
         </dt>
         <dd>
-          ...
+          Second octet of the <a>parameter bytes</a>
         </dd>
         <dt>
           attribute octet[] data
         </dt>
         <dd>
-          ...
+          <a>Data field bytes</a>, or <code>null</code> if command has no data
         </dd>
         <dt>
           attribute unsigned short le
         </dt>
         <dd>
-          ...
+          The length of the expected response data, or <code>-1</code> if
+          application does not require a specific length
         </dd>
       </dl>
     </section><!-- Interface SECommand -->
@@ -751,7 +981,8 @@
         <a>SEResponse</a> Interface
       </h2>
       <p>
-        The <a>SEResponse</a> interface provides ...
+        The <a>SEResponse</a> interface represents an <a>APDU response</a>
+        received from a secure element.
       </p>
       <dl title="[Constructor(ArrayOfOctects raw)] interface SEResponse" class=
       "idl">
@@ -759,36 +990,43 @@
           readonly attribute octet sw1
         </dt>
         <dd>
-          ...
+          First octet of response's <a>status word</a>
         </dd>
         <dt>
           readonly attribute octet sw2
         </dt>
         <dd>
-          ...
+          Second octet of response's <a>status word</a>
         </dd>
         <dt>
           readonly attribute octet[] data
         </dt>
         <dd>
-          ...
+          The response's <a>data field bytes</a>
         </dd>
         <dt>
           boolean isStatus()
         </dt>
         <dd>
+          Utility method to test the <a>status word</a> of an <a>APDU
+          response</a>. This method MUST return <code>true</code> if the
+          parameters match the value of the response.
           <dl class='parameters'>
             <dt>
               octet sw1
             </dt>
             <dd>
-              First octet of response status word
+              Value to compare to the first octet of response's <a>status
+              word</a>, or <code>null</code> if this first octet may have any
+              value.
             </dd>
             <dt>
               octet sw2
             </dt>
             <dd>
-              Second octet of response status word
+              Value to compare to the second octet of response's <a>status
+              word</a>, or <code>null</code> if this second octet may have any
+              value.
             </dd>
           </dl>
         </dd>
@@ -799,11 +1037,15 @@
       <h2>
         The <code>SEError</code> enum
       </h2>
+      <div class="note">
+        From latest <a>Promise</a> specification, it seems this error type
+        should extend ECMAScript Error type
+      </div>
       <p>
         In the interfaces defined above, some method return a <a>Promise</a>
         object. If an error occurs during the execution of any of these
-        methods, the catch method of the promise object will be invoked with an
-        error value of the type <a>SEError</a>:
+        methods, the <code>reject()</code> method of promise's resolver will be
+        invoked with an error value of the type <a>SEError</a>:
       </p>
       <dl title="enum SEError" class="idl">
         <dt>
@@ -841,8 +1083,14 @@
           no_channel
         </dt>
         <dd>
-          Tentative to open a channel (basic or logical) failed because no
-          channel is available
+          Tentative to open a channel failed because no channel is available
+        </dd>
+        <dt>
+          closed
+        </dt>
+        <dd>
+          The operation could not be fulfilled because the target object is
+          closed
         </dd>
       </dl>
     </section><!-- SEError -->
@@ -855,6 +1103,9 @@
         The javascript code excerpt below shows how a web application can wait
         for a card to be present, and send it an APDU command:
       </p>
+      <div class="note">
+        See <a href="#note-promise">note on <code>Promise</code></a>
+      </div>
       <pre class="example highlight">
 
             // my application identifier
@@ -921,7 +1172,7 @@
         Acknowledgements
       </h2>
       <p>
-        Thanks
+        Thanks...
       </p>
     </section>
   </body>
