@@ -450,7 +450,7 @@
         application specific command. Given the removal nature of many secure
         elements, a reader may be empty, meaning that no secure element is
         connected to this reader. For instance, a USB smart card reader may be
-        connected to a computer, but not smart card is inserted. Or a device
+        connected to a computer, but no smart card is inserted. Or a device
         may support NFC interactions with secure elements, but none is in the
         field. For this reason, the API provides a mean to query the list of
         available readers, and for each of them if they are empty or if a
@@ -544,7 +544,7 @@
           attribute EventHandler onsepresent
         </dt>
         <dd>
-          Event handler for the sepresent event. This event MUST be triggered
+          Event handler for the SE-present event. This event MUST be triggered
           each time any of the following situations occurs:
           <ul>
             <li>Application starts while a secure element is present in a
@@ -563,7 +563,7 @@
           attribute EventHandler onseremoval
         </dt>
         <dd>
-          Event handler for the seremoval event. This event MUST be triggered
+          Event handler for the SE-removal event. This event MUST be triggered
           when a secure element which was present in a reader is not present
           anymore (it has been unplugged, or is out of reach if it was
           connected through wireless communication).
@@ -573,7 +573,7 @@
         </dt>
         <dd>
           <div class="note" id="note-promise">
-            This APi makes extensive use of the <a>Promise</a> type for
+            This API makes extensive use of the <a>Promise</a> type for
             asynchronous operations. Considering the instability of this type's
             definition, we only give API description for
             <code>SecureElementManager</code>'s <code>close()</code> method.
