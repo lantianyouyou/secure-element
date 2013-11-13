@@ -187,7 +187,7 @@
           Some cards also support both communication methods.
           </li>
           <li>
-            <abbr title="Universal Integrated Circuit Card"><a>UICC</a></abbr>
+            <a><abbr title="Universal Integrated Circuit Card">UICC</abbr></a>
             cards are smart cards used in cellular telephony, which may be
             delivered in different sizes. They are often called <abbr title=
             "Subscriber Identity Module">SIM</abbr>, which is actually the name
@@ -362,8 +362,8 @@
       </p>
       <ul>
         <li>
-          <dfn>Answer to Reset</dfn> (<dfn>ATR</dfn>) is defined in
-          [[!ISO7816-3]]
+          <dfn><abbr title="Answer to Reset">ATR</abbr></dfn> (Answer to Reset)
+          is defined in [[!ISO7816-3]]
         </li>
         <li>
           <dfn>APDU command</dfn>, <dfn>APDU response</dfn>, <dfn>class
@@ -373,8 +373,8 @@
           [[!ISO7816-4]]
         </li>
         <li>
-          <dfn>Application Identifier</dfn> (<dfn>AID</dfn>) is defined in
-          [[!ISO7816-5]].
+          <dfn><abbr title="Application Identifier">AID</abbr></dfn>
+          (Application Identifier) is defined in [[!ISO7816-5]].
         </li>
         <li>
           <dfn>UICC</dfn> is defined in [[!ETSI-102216]]
@@ -470,13 +470,12 @@
       <p>
         To this intent, the session object provides a mean to open a
         <dfn>channel</dfn> with a specific secure element application, which is
-        uniquely identified by an <abbr title=
-        "Application Identifier">AID</abbr> (Application Identifier). The web
-        application runtime and the secure element may then perform some
-        internal security checking to ensure the web application is allowed to
-        connect to this secure element application. If authorized, the returned
-        channel object is the one providing the method to send commands to the
-        secure element application, and get the corresponding responses.
+        uniquely identified by an <a>AID</a>. The web application runtime and
+        the secure element may then perform some internal security checking to
+        ensure the web application is allowed to connect to this secure element
+        application. If authorized, the returned channel object is the one
+        providing the method to send commands to the secure element
+        application, and get the corresponding responses.
       </p>
       <p>
         The above steps required to send a command to a secure element creates
@@ -787,9 +786,9 @@
           readonly attribute octet[] atr
         </dt>
         <dd>
-          This attribute MUST return the <a>Answer to Reset</a> (ATR) provided
-          by the secure element, or <code>null</code> if the secure element
-          does not provide an ATR.
+          This attribute MUST return the <a>Answer to Reset</a> provided by the
+          secure element, or <code>null</code> if the secure element does not
+          provide one.
         </dd>
         <dt>
           Promise&lsaquo;Channel&rsaquo; openBasicChannel()
@@ -870,8 +869,8 @@
         <dd>
           This attribute MUST return the secure element's response to the
           channel opening operation. It MUST be <code>null</code> if the
-          channel was opened on the default secure element application (no AID
-          was provided in the open channel operation).
+          channel was opened on the default secure element application (no
+          <a>AID</a> was provided in the open channel operation).
         </dd>
         <dt>
           Promise&lsaquo;SEResponse&rsaquo; transmit()
