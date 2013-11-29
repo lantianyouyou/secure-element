@@ -915,13 +915,14 @@
           Updates the targeted application of this channel to be the next one
           matching the partial <a>Application Identifier</a> passed when this
           channel was open. Invoking this method MUST fail with
-          <code>"invalid_state"</code> error if this channel was not open with
-          a partial AID, or if there is no next application matching that
-          partial AID. In that case the application associated to this channel
-          is unchanged. If a next application has been found and associated to
-          this channel, this operation succeeds and returns the secure
-          element's response. This response value MUST be assigned to the
-          <code>openResponse</code> attribute.
+          <code>invalid_state</code> error if this channel was not open with a
+          partial AID, or with the <code>no_application</code> error if there
+          is no next application matching that partial AID. In that case the
+          application associated to this channel is unchanged. If a next
+          application has been found and associated to this channel, this
+          operation succeeds and returns the secure element's response. This
+          response value MUST be assigned to the <code>openResponse</code>
+          attribute.
           <div class="note">
             See <a href="#note-promise">note on <code>Promise</code></a>
           </div>
@@ -1138,6 +1139,12 @@
         </dt>
         <dd>
           Tentative to open a channel failed because no channel is available
+        </dd>
+        <dt>
+          no_application
+        </dt>
+        <dd>
+          The requested application was not found on the secure element
         </dd>
         <dt>
           closed
