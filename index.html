@@ -817,9 +817,20 @@
               octet[] aid
             </dt>
             <dd>
-              This parameter value MUST be the <a>Application Identifier</a> of
-              the target application on the secure element, or
-              <code>null</code> if this application is the default one.
+              This parameter value MUST either be:
+              <ul>
+                <li>The complete <a>Application Identifier</a> of the targeted
+                application on the secure element;
+                </li>
+                <li>A partial <a>Application Identifier</a> matching a set of
+                targeted applications on the secure element, in which case the
+                channel will be opened on the first matching application;
+                </li>
+                <li>
+                  <code>null</code> if the channel should be opened on the
+                  default application.
+                </li>
+              </ul>
             </dd>
           </dl>
           <div class="note">
@@ -838,9 +849,20 @@
               octet[] aid
             </dt>
             <dd>
-              This parameter value MUST be the <a>Application Identifier</a> of
-              the target application on the secure element, or
-              <code>null</code> if this application is the default one.
+              This parameter value MUST either be:
+              <ul>
+                <li>The complete <a>Application Identifier</a> of the targeted
+                application on the secure element;
+                </li>
+                <li>A partial <a>Application Identifier</a> matching a set of
+                targeted applications on the secure element, in which case the
+                channel will be opened on the first matching application;
+                </li>
+                <li>
+                  <code>null</code> if the channel should be opened on the
+                  default application.
+                </li>
+              </ul>
             </dd>
           </dl>
           <div class="note">
@@ -885,6 +907,24 @@
           channel opening operation. It MUST be <code>null</code> if the
           channel was opened on the default secure element application (no
           <a>AID</a> was provided in the open channel operation).
+        </dd>
+        <dt>
+          Promise&lsaquo;SEResponse&rsaquo; selectNext()
+        </dt>
+        <dd>
+          Updates the targeted application of this channel to be the next one
+          matching the partial <a>Application Identifier</a> passed when this
+          channel was open. Invoking this method MUST fail with
+          <code>"invalid_state"</code> error if this channel was not open with
+          a partial AID, or if there is no next application matching that
+          partial AID. In that case the application associated to this channel
+          is unchanged. If a next application has been found and associated to
+          this channel, this operation succeeds and returns the secure
+          element's response. This response value MUST be assigned to the
+          <code>openResponse</code> attribute.
+          <div class="note">
+            See <a href="#note-promise">note on <code>Promise</code></a>
+          </div>
         </dd>
         <dt>
           Promise&lsaquo;SEResponse&rsaquo; transmit()
