@@ -395,18 +395,18 @@
       <ul>
         <li>
           <strong>Communication</strong> between the secure element and the web
-          application has to be secured, in order to ensure the
-          confidentiality and integrity of the message exchange. This can
-          either be achieved if the web application using the secure element
-          API executes in a trusted execution environment offering guarantees
-          on the integrity and confidentiality of the communication link. Or it
-          can be provided programmatically by encryption and/or MACing of the
-          messages exchanged with the secure element (e.g. using
-          GlobalPlatform's secure messaging technology [[GP]]). The off-card
-          processing of these messages has then to be done in a trusted
-          execution environment, which may be on the device to which the secure
-          element is connected, or on a remote device (e.g. the web
-          application's originating server).
+          application has to be secured, in order to ensure the confidentiality
+          and integrity of the message exchange. This can either be achieved if
+          the web application using the secure element API executes in a
+          trusted execution environment offering guarantees on the integrity
+          and confidentiality of the communication link. Or it can be provided
+          programmatically by encryption and/or MACing of the messages
+          exchanged with the secure element (e.g. using GlobalPlatform's secure
+          messaging technology [[GP]]). The off-card processing of these
+          messages has then to be done in a trusted execution environment,
+          which may be on the device to which the secure element is connected,
+          or on a remote device (e.g. the web application's originating
+          server).
         </li>
         <li>
           <strong>Interface</strong> between the user and the web application
@@ -450,8 +450,8 @@
         application specific command. Given the removal nature of many secure
         elements, a reader may be empty, meaning that no secure element is
         connected to this reader. For instance, a USB smart card reader may be
-        connected to a computer, but no smart card is inserted. Or a device
-        may support NFC interactions with secure elements, but none is in the
+        connected to a computer, but no smart card is inserted. Or a device may
+        support NFC interactions with secure elements, but none is in the
         field. For this reason, the API provides a mean to query the list of
         available readers, and for each of them if they are empty or if a
         secure element is present. In addition, this specification defines
@@ -565,7 +565,13 @@
           Event handler for the SE-removal event. This event MUST be triggered
           when a secure element which was present in a reader is not present
           anymore (it has been unplugged, or is out of reach if it was
-          connected through wireless communication).
+          connected through wireless communication). As soon as this event is
+          triggered, all <a>Reader</a>, <a>Session</a> and <a>Channel</a>
+          objects providing access to this secure element are marked as closed.
+          Calling <code>openSession()</code> on the reader,
+          <code>openBasicChannel()</code> or <code>openLogicalChannel()</code>
+          on an associated session, or <code>transmit()</code> on a previously
+          opened channel MUST fail, with the "closed" SEError value.
         </dd>
         <dt>
           Promise&lsaquo;SecureElementManager&rsaquo; close()
@@ -584,6 +590,17 @@
             following steps:
           </p>
           <ol>
+            <li>Let <var>promise</var> be a new <a>Promise</a> object and <var>
+              resolver</var> its associated <code>resolver</code>.
+            </li>
+            <li>Return <var>promise</var> to the caller and continue the
+            following steps asynchronously.
+            </li>
+            <li>If the <code>close()</code> method has already been called on
+            this object, then invoke <var>resolver</var>'s
+            <code>accept()</code> method with this <a>SecureElementManager</a>
+            object, and exit those steps.
+            </li>
             <li>Let <var>countdown</var> be the number of readers in the <code>
               readers</code> attribute, and <var>errors</var> an integer
               initialized to 0.
@@ -596,12 +613,6 @@
             </li>
             <li>Set the <code>readers</code> attribute value to
             <code>null</code>.
-            </li>
-            <li>Let <var>promise</var> be a new <a>Promise</a> object and <var>
-              resolver</var> its associated <code>resolver</code>.
-            </li>
-            <li>Return <var>promise</var> to the caller and continue the
-            following steps asynchronously.
             </li>
             <li>If <var>countdown</var> is 0, then invoke <var>resolver</var>'s
             <code>accept()</code> method with this <a>SecureElementManager</a>
@@ -691,7 +702,8 @@
         </dt>
         <dd>
           This method closes all sessions opened by this reader, and their
-          descendent <a>Channel</a> objects.
+          descendent <a>Channel</a> objects. Invoking <code>close()</code>
+          method on an already closed reader is an idempotent operation.
           <div class="note">
             See <a href="#note-promise">note on <code>Promise</code></a>
           </div>
@@ -841,6 +853,8 @@
         <dd>
           Closes the connection with the Secure Element. This will close any
           channels opened by this application with this Secure Element.
+          Invoking <code>close()</code> method on an already closed session is
+          an idempotent operation.
           <div class="note">
             See <a href="#note-promise">note on <code>Promise</code></a>
           </div>
@@ -916,7 +930,8 @@
           This method closes this session object. If a transmit operation is
           still waiting for the secure element response, the user agent must
           terminate that asynchronous operation with a <code>closed</code>
-          error status.
+          error status. Invoking <code>close()</code> method on an already
+          closed channel is an idempotent operation.
           <div class="note">
             See <a href="#note-promise">note on <code>Promise</code></a>
           </div>
