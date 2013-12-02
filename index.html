@@ -900,7 +900,7 @@
           channel</a>, it MUST return FALSE otherwise.
         </dd>
         <dt>
-          readonly attribute SEResponse openResponse
+          readonly attribute ArrayBufferView openResponse
         </dt>
         <dd>
           This attribute MUST return the secure element's response to the
@@ -909,7 +909,7 @@
           <a>AID</a> was provided in the open channel operation).
         </dd>
         <dt>
-          Promise&lsaquo;SEResponse&rsaquo; selectNext()
+          Promise&lsaquo;ArrayBufferView&rsaquo; selectNext()
         </dt>
         <dd>
           Updates the targeted application of this channel to be the next one
@@ -965,6 +965,29 @@
           </div>
         </dd>
         <dt>
+          Promise&lsaquo;ArrayBufferView&rsaquo; transmit()
+        </dt>
+        <dd>
+          <p>
+            This method behaves exactly as the transmit method above, excepts
+            that both its parameter and the response are passed as a raw binary
+            data. Before transmitting the command to the secure element, the
+            implementation of this method MUST set the logical channel in the
+            <a>class byte</a> of the command so that it fits the channel
+            allocated to this <a>Channel</a> object.
+          </p>
+          <dl class='parameters'>
+            <dt>
+              ArrayBufferView cmd
+            </dt>
+            <dd>
+              The raw command to send to the secure element application. The
+              channel information in the <a>class byte</a> of the command
+              (first octet of the cmd data) will be ignored.
+            </dd>
+          </dl>
+        </dd>
+        <dt>
           Promise&lsaquo;Channel&rsaquo; close()
         </dt>
         <dd>
@@ -989,7 +1012,7 @@
         can be sent to a secure element.
       </p>
       <dl title=
-      "[Constructor(octet data, octet ins, octet p1, octet p2, optional ArrayOfOctects data, optional octet le)] interface SECommand"
+      "[Constructor(octet data, octet ins, octet p1, octet p2, optional ArrayBufferView data, optional octet le)] interface SECommand"
       class="idl">
         <dt>
           attribute octet cla
@@ -1016,7 +1039,7 @@
           Second octet of the <a>parameter bytes</a>
         </dd>
         <dt>
-          attribute octet[] data
+          attribute ArrayBufferView data
         </dt>
         <dd>
           <a>Data field bytes</a>, or <code>null</code> if command has no data
@@ -1039,8 +1062,8 @@
         The <a>SEResponse</a> interface represents an <a>APDU response</a>
         received from a secure element.
       </p>
-      <dl title="[Constructor(ArrayOfOctects raw)] interface SEResponse" class=
-      "idl">
+      <dl title="[Constructor(ArrayBufferView raw)] interface SEResponse"
+      class="idl">
         <dt>
           readonly attribute octet sw1
         </dt>
@@ -1054,7 +1077,7 @@
           Second octet of response's <a>status word</a>
         </dd>
         <dt>
-          readonly attribute octet[] data
+          readonly attribute ArrayBufferView data
         </dt>
         <dd>
           The response's <a>data field bytes</a>
