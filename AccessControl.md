@@ -1,4 +1,3 @@
-
 # SE API: Access Control Proposal
 
 This documents describes why the Secure Element API has to be protected, and how the GlobalPlatform specification can address this requirement.
@@ -21,9 +20,10 @@ GlobalPlatform defines a standard mechanism to control which applications on a u
 
  * An Access Control Enforcer is running on the device of the client application. Any tentative to establish a communication with a secure element application from this device will trigger this enforcer, which will query the secure element to get the access rules (and usually cache them), and check that the requesting application is authorized to communicate with the secure element.
 
-![Access control architecture diagram](images/gp_access_control.png)
+![Access control architecture diagram](images/gp-access-control.png)
 
 *Overview of the GlobalPaltform access control architecture*
+
 
 This GlobalPlatform specification defines a simple mechanism that protects legitimate users using non-compromised devices from malicious applications. Note that it does not protect from a compromised device that would not properly implement the Access Control Enforcer, which is out of scope of our objectives, and is addressed by the internal protection of the secure element itself (PIN, secure messaging, etc.)
 
