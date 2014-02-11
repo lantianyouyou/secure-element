@@ -1,6 +1,6 @@
 # SE API: Access Control Proposal
 
-This documents describes why the Secure Element API has to be protected, and how the GlobalPlatform specification can address this requirement.
+This documents describes why the [Secure Element API](http://opoto.github.io/secure-element) has to be protected, and how the GlobalPlatform specification can address this requirement.
 
 ## Objectives
 
@@ -83,7 +83,7 @@ Because the author signature does not sign the full list of resources for hosted
 
 ### Impact on the W3C Secure Element API
 
-In order to use the access control as described above, the following changes have to be made to the Secure Element API:
+In order to use the access control as described above, the following changes have to be made to the [Secure Element API](http://opoto.github.io/secure-element):
 
  * A new "access control" section must be added, stating that the implementation of the Secure Element API must implement the access control as defined above (with references to GlobalPlatform specifications)
 
