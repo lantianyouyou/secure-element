@@ -7,16 +7,14 @@
     <meta charset='utf-8'>
     <script src='http://www.w3.org/Tools/respec/respec-w3c-common' async=""
     class='remove'>
-</script><!--
-    <script src='../../editing/respec-w3c-common.js' async="" class='remove'></script>
-    -->
-
+</script>
     <script class='remove'>
 /*Respec configuration*/
     var respecConfig = {
           // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
           specStatus:           "unofficial",
-          
+          //specStatus:           "ED",
+
           // the specification's short name, as in http://www.w3.org/TR/short-name/
           shortName:            "secure-element",
 
@@ -56,16 +54,16 @@
               ,   companyURL: "http://www.intel.com/"
               },
           ],
-          
+
           // name of the WG
           wg:           "System Applications Working Group",
-          
+
           // URI of the public WG page
           wgURI:        "http://www.w3.org/2012/sysapps/",
-          
+
           // name (without the @w3c.org) of the public mailing to which comments are due
           wgPublicList: "public-sysapps",
-          
+
           // URI of the patent status for this WG, for Rec-track documents
           // !!!! IMPORTANT !!!!
           // This is important for Rec-track documents, do not copy a patent URI from a random
@@ -76,6 +74,13 @@
 
           localBiblio:  {
             "dummy" : "dummy"
+            // Reference to the ECMAScript, edition 6, specification
+            , "ES6": {
+                    title: "ECMA-262, 6th Edition / Draft January 20, 2014"
+                ,   href: "http://people.mozilla.org/~jorendorff/es6-draft.html"
+                ,   status: "Draft"
+                ,   publisher: "Ecma International"
+            }
             , "ETSI-102216": {
                     title:    "TR 102 216 : Smart cards; Vocabulary for Smart Card Platform specifications"
                 ,   href:     "http://webapp.etsi.org/workprogram/Report_WorkItem.asp?WKI_ID=18815&curItemNr=1&totalNrItems=1&optDisplay=10&qSORT=HIGHVERSION&qETSI_STANDARD_TYPE=%27TR%27&qETSI_NUMBER=102+216"
@@ -106,6 +111,18 @@
                 ,   authors:  [ "W3C Web Cryptography Working Group" ]
                 ,   publisher:  "W3C"
               }
+            , "MANIFEST": {
+                    title:    "Manifest for web application"
+                ,   href:     "http://w3c.github.io/manifest/"
+                ,   authors:  [ "W3C WebApps Working Group" ]
+                ,   publisher:  "W3C"
+              }
+            , "WDSIG": {
+                    title:    "XML Digital Signatures for Widgets"
+                ,   href:     "http://www.w3.org/TR/widgets-digsig/"
+                ,   authors:  [ "W3C ?? Working Group" ]
+                ,   publisher:  "W3C"
+              }
             , "NFC": {
                     title:    "Web NFC API"
                 ,   href:     "http://htmlpreview.github.io/?https://github.com/w3c/nfc/blob/master/proposals/common/nfc.html"
@@ -122,6 +139,12 @@
                     title:    "Card specifications"
                 ,   authors:  [ "GlobalPlatform" ]
                 ,   href:     "http://www.globalplatform.org/specificationscard.asp"
+                ,   publisher:  "GlobalPlatform"
+              }
+            , "GP-AC": {
+                    title:    "Secure Element Access Control"
+                ,   authors:  [ "GlobalPlatform" ]
+                ,   href:     "http://www.globalplatform.org/specificationsdevice.asp"
                 ,   publisher:  "GlobalPlatform"
               }
           }
@@ -188,8 +211,9 @@
           </li>
           <li>
             <a><abbr title="Universal Integrated Circuit Card">UICC</abbr></a>
-            cards are smart cards used in cellular telephony, which may be
-            delivered in different sizes. They are often called <abbr title=
+            (Universal Integrated Circuit Card) are smart cards used in
+            cellular telephony, which may be delivered in different sizes. They
+            are often called <abbr title=
             "Subscriber Identity Module">SIM</abbr>, which is actually the name
             of the application hosted by the <a>UICC</a> to access GSM
             networks. <a>UICC</a> may however host other applications.
@@ -338,24 +362,40 @@
         Dependencies
       </h2>
       <p>
-        This specification depends on the following interfaces and concepts
-        defined in other specifications.
+        This specification depends on interfaces and concepts defined in the
+        following specifications.
       </p>
       <p>
-        The following dependencies are defined in [[!HTML]]: <dfn><a href=
+        [[!HTML]]: <dfn><a href=
         "http://www.whatwg.org/specs/web-apps/current-work/#event-handlers">event
         handler</a></dfn>, <dfn><a href=
-        "http://www.whatwg.org/specs/web-apps/current-work/#origin">origin</a></dfn>.
+        "http://www.whatwg.org/specs/web-apps/current-work/#origin">origin</a></dfn>
+        concept.
       </p>
       <p>
-        The following dependencies are defined in [[!DOM4]]: the <dfn><a href=
+        [[!DOM4]]: the <dfn><a href=
         "http://dom.spec.whatwg.org/#event"><code>Event</code></a></dfn> and
-        the <dfn><a href=
-        "http://dom.spec.whatwg.org/#promises"><code>Promise</code></a></dfn>
-        interfaces, the concepts of a <a href=
-        "http://dom.spec.whatwg.org/#concept-resolver"><dfn>resolver</dfn></a>,
-        <dfn><a href="http://dom.spec.whatwg.org/#concept-event-fire">fire an
+        <dfn><a href=
+        "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a></dfn>
+        interfaces, the concept of <dfn><a href=
+        "http://dom.spec.whatwg.org/#concept-event-fire">firing an
         event</a></dfn>.
+      </p>
+      <p>
+        [[!ES6]]: the <dfn><a href=
+        "http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects">
+        <code>Promise</code></a></dfn> object type.
+      </p>
+      <p>
+        [[!WDSIG]]: The <dfn>author signature file</dfn> and <dfn>author
+        certificate</dfn>
+      </p>
+      <p>
+        [[!MANIFEST]]: The web application <dfn>manifest</dfn> file
+      </p>
+      <p>
+        [[!GP-AC]]: The <dfn>Access Rules</dfn> and <dfn>Access Control
+        Enforcer</dfn> concepts.
       </p>
       <p>
         Some secure element concepts are defined in ISO/IEC specifications:
@@ -418,23 +458,25 @@
         </li>
         <li>
           <strong>Access</strong> to secure element applications should be
-          restricted to authorized parties. The secure element embedded
-          application may enforce such control by requiring authentication of
-          the off-card communicating party. Some implementation of this control
-          may require the cooperation of the web application runtime: for
-          instance the GlobalPlatform access control mechanism [[GP]] requires
-          the runtime to send the off-card application signature to the secure
-          element for the latter to verify if it is authorized or not. These
-          controls are out of scope of the herein specification.
+          restricted to authorized parties. Secure element embedded application
+          usually enforce such control by requiring authentication of the
+          off-card communicating party, for instance by asking user to present
+          a PIN to unlock access, or performing a mutual authentication before
+          any sensitive operation.<br>
+          There is however a risk of denial of service (DoS) attacks, where an
+          attacker would e.g. deliberately present multiple invalid PIN values
+          to block the secure element, or sending burst of commands preventing
+          legitimate applications to execute optimally. In order to mitigate
+          this risk, this specification requires the web application runtime to
+          implement the access control mechanism defined in <a href=
+          "#access-control">Access Control</a> section.
         </li>
         <li>
           <strong>Traceability</strong> of the user may be facilitated by the
-          unique identifying information the secure element may contain. In
-          addition to the access control implemented by the card, the web
-          application runtime should make sure that only trusted applications
-          (signed by a trusted party, as defined by the [[SYSAPPS]]) have
-          access to the secure element API, and user has to explicitly allow
-          this application to execute.
+          unique identifying information the secure element may contain. Here
+          again, the access control defined in <a href="#access-control">Access
+          Control</a> section will ensure only trusted applications have access
+          to the secure element API.
         </li>
       </ul>
     </section><!-- Security -->
@@ -494,6 +536,174 @@
         </figcaption>
       </figure>
     </section><!-- Secure Element Services -->
+    <!-- - - - - - - - - - - - - -  Access Control  - - - - - - - - - - -->
+    <section id="access-control">
+      <h2>
+        Access Control
+      </h2>
+      <p>
+        In order to make sure only trusted applications are allowed to use this
+        API, the web application runtime MUST implement the access control
+        defined in [[GP-AC]], which defines a simple mechanism that protects
+        legitimate users using non-compromised devices from malicious
+        applications. Note that it does not protect from a compromised device
+        that would not properly implement the Access Control Enforcer, which is
+        addressed by the internal protection of the secure element itself
+        (using e.g. PIN or secure messaging)
+      </p>
+      <section>
+        <h3>
+          Overall architecture
+        </h3>
+        <p>
+          To control which applications running on a user device are allowed to
+          access secure element applications, several entities are involved:
+        </p>
+        <ul>
+          <li>The secure element hosts a list of <a>Access Rules</a>. An access
+          rule contains the <a>AID</a> of the secure element application to
+          control access to, and the identifier of the requesting application
+          running on the device, as well as a filter on authorized APDUs, or a
+          simple boolean to authorize all or no communications.
+          </li>
+          <li>An <a>Access Control Enforcer</a> is running on the device of the
+          client application, inside the web application runtime. Any attempt
+          to establish a communication with a secure element application from
+          this device triggers this enforcer, which queries the secure element
+          to get the access rules (and usually cache them), and check that the
+          requesting application is authorized to communicate with the targeted
+          secure element application.
+          </li>
+        </ul>
+        <figure>
+          <a href="#access-control-img"><img src="images/gp-access-control.png"
+          alt="Class graph"></a>
+          <figcaption id="access-control-img">
+            The figure above shows the overall access control architecture.
+          </figcaption>
+        </figure>
+        <p>
+          Sections below describe how the Global Platform Access Control is
+          applied to web applications. Details of the Global Platform Access
+          Control mechanisms itself are defined in [[!GP-AC]].
+        </p>
+      </section>
+      <section>
+        <h3>
+          Trusted application identifier
+        </h3>
+        <p>
+          The <a>Access Control Enforcer</a> uses an application identifier to
+          check whether the application is white listed in <a>Access Rules</a>.
+          This identifier needs to be trustworthy so that only authorized
+          application may have a given identifier. Web applications use the
+          certificate-based identifier as defined in [[!GP-AC]]:
+        </p>
+        <ul>
+          <li>The web application MUST have a web application <a>manifest</a>
+          file, as defined in [[!MANIFEST]], with the <dfn id=
+          "member-se_signature_url"><code>se_author_signature</code></dfn>
+          member, which value MUST be the relative URI to the <a>author
+          signature file</a>.
+          </li>
+          <li>The <a>author signature file</a> is an <a href=
+          "http://www.w3.org/TR/widgets-digsig/#author-signatures">author
+          signature</a> as defined in [[!WDSIG]]. This file is an XML document,
+          deployed with the web application (either as a resource of the
+          packaged application, or as an online resource for hosted
+          application). The signature is computed using one of the following
+          input data:
+            <ul>
+              <li>For packaged applications: the exhaustive list of the
+              packaged application resources, excluding the signature file
+              itself.
+              </li>
+              <li>For hosted applications: an absolute URI representing the web
+              application's top URL in the URI hierarchy. All application
+              resources, including the manifest file, MUST be located
+              hierarchically below this URI. Consequently, any resource which
+              URL is not hierarchically below this URI will not be considered
+              part of this application, and hence not eligible to benefit from
+              its potentially granted access to the Secure Element API.
+                <p class="note">
+                  It is expected that the manifest will include a "scope"
+                  member, as discussed <a href=
+                  "https://github.com/slightlyoff/ServiceWorker/issues/137">here</a>
+                  and <a href=
+                  "https://github.com/w3c/manifest/issues/114">here</a>, and
+                  this scope should be the signed data. Alternatively we could
+                  sign the whole manifest.
+                </p>
+              </li>
+            </ul>
+          </li>
+          <li>The <a>author certificate</a> is the certificate used to compute
+          the digital signature, and its value is included in the <a>author
+          signature file</a>. It MAY be a self-signed certificate. This
+          certificate, and the certificates part of its issuance chain, if any,
+          MUST be valid:
+            <ul>
+              <li>the current date MUST be inside the certificate validity
+              dates;
+              </li>
+              <li>the certificate signature MUST be valid;
+              </li>
+              <li>If a revocation endpoint is set in the certificate, the
+              runtime MUST use it to check this certificate is not revoked.
+              </li>
+            </ul>
+          </li>
+          <li>The SHA-1 hash of the <a>author certificate</a> is used as the
+          device application identifier in the access control verification
+          process, following the GlobalPlatform Access Control process defined
+          for Rich Execution Environment.
+          </li>
+        </ul>
+        <p>
+          While applying the GlobalPlatform Access Control process, if the
+          <a>Access Control Enforcer</a> detects the Secure Element does not
+          implement the GlobalPlatform Access Control (it does not have access
+          rules), the <a>Access Control Enforcer</a> may use its own
+          certificate trust store to grant or refuse access to the Secure
+          Element API.
+        </p>
+      </section>
+      <section>
+        <h3>
+          Additional security rules
+        </h3>
+        <p>
+          Because the <a>author signature file</a> does not sign the full list
+          of resources for hosted web applications, the origin and integrity of
+          these resources must be guaranteed using the following security
+          restriction:
+        </p>
+        <ul>
+          <li>To be eligible to gain access to the Secure Element API, a hosted
+          web application MUST be fetched using HTTPS protocol.
+          </li>
+          <li>The TLS/SSL server certificate of this HTTPS connection MUST be
+          trusted and valid:
+            <ul>
+              <li>Its subject MUST match the hosting domain name.
+              </li>
+              <li>Its validity dates MUST include the current date.
+              </li>
+              <li>The issuance signature chain MUST be valid.
+              </li>
+              <li>The issuance chain MUST be rooted by a CA trusted by the web
+              application runtime.
+              </li>
+            </ul>
+          </li>
+          <li>The user MUST not be able to bypass these rules. Some browsers
+          offer users to define "exceptions" to allow connections to a HTTPS
+          URL even if SSL server certificate is invalid. Such exception MUST
+          not be used to allow access to the Secure Element API.
+          </li>
+        </ul>
+      </section>
+    </section><!-- Access Control -->
     <!-- - - - - - - - - - - - Interface Navigator - - - - - - - - - -->
     <section>
       <h2>
@@ -568,42 +778,33 @@
           connected through wireless communication). As soon as this event is
           triggered, all <a>Reader</a>, <a>Session</a> and <a>Channel</a>
           objects providing access to this secure element are marked as closed.
-          Calling <code>openSession()</code> on the reader,
-          <code>openBasicChannel()</code> or <code>openLogicalChannel()</code>
-          on an associated session, or <code>transmit()</code> on a previously
-          opened channel MUST fail, with the "closed" SEError value.
+          Calling any method other than <code>close()</code> on associated
+          readers, sessions, or channels MUST fail with an
+          <a>SEClosedException</a> error.
         </dd>
         <dt>
-          Promise&amp;lt;SecureElementManager> close()
+          Promise&amp;lt;SecureElementManager&gt; close()
         </dt>
         <dd>
-          <div class="note" id="note-promise">
-            This API makes extensive use of the <a>Promise</a> type for
-            asynchronous operations. Considering the instability of this type's
-            definition, we only give API description for
-            <code>SecureElementManager</code>'s <code>close()</code> method.
-            This will be complemented when <a>Promise</a> is stable.
-          </div>
           <p>
             This method closes all readers and descendent <a>Session</a> and
             <a>Channel</a> objects. When invoked, the user agent MUST run the
             following steps:
           </p>
           <ol>
-            <li>Let <var>promise</var> be a new <a>Promise</a> object and <var>
-              resolver</var> its associated <code>resolver</code>.
+            <li>Let <var>promise</var> be a newly-created <a>Promise</a>
+            object.
             </li>
-            <li>Return <var>promise</var> to the caller and continue the
-            following steps asynchronously.
+            <li>Return <var>promise</var> and continue the following steps
+            asynchronously.
             </li>
             <li>If the <code>close()</code> method has already been called on
-            this object, then invoke <var>resolver</var>'s
-            <code>accept()</code> method with this <a>SecureElementManager</a>
-            object, and exit those steps.
+            this object, then resolve <var>promise</var> with this
+            <a>SecureElementManager</a> object.
             </li>
             <li>Let <var>countdown</var> be the number of readers in the <code>
-              readers</code> attribute, and <var>errors</var> an integer
-              initialized to 0.
+              readers</code> attribute, and <var>error</var> an object
+              initialized to <code>undefined</code>.
             </li>
             <li>Invoke <code>close()</code> method on each <a>Reader</a> object
             in the array returned by the <code>readers</code> attribute.
@@ -614,24 +815,22 @@
             <li>Set the <code>readers</code> attribute value to
             <code>null</code>.
             </li>
-            <li>If <var>countdown</var> is 0, then invoke <var>resolver</var>'s
-            <code>accept()</code> method with this <a>SecureElementManager</a>
-            object, and exit those steps.
+            <li>If <var>countdown</var> is 0, then resolve <var>promise</var>
+            with this <a>SecureElementManager</a> object.
             </li>
-            <li>When the <code>accept()</code> method of an element of
-            <var>readerpromises</var> set is invoked, <var>countdown</var> is
-            decremented. If <var>countdown</var> is 0 and <var>errors</var> is
-            0, then invoke <var>resolver</var>'s <code>accept()</code> method
-            with this <a>SecureElementManager</a> object. If
-            <var>countdown</var> is 0 and <var>errors</var> is greater than 0,
-            then invoke <var>resolver</var>'s <code>reject()</code> method with
-            an <a>SEError</a> object.
+            <li>When a <var>readerpromises</var> element is fulfilled,
+            <var>countdown</var> is decremented. If <var>countdown</var> is 0
+            and <var>error</var> is <code>undefined</code>, then resolve <var>
+              promise</var> with this <a>SecureElementManager</a> object. If
+              <var>countdown</var> is 0 and <var>error</var> is not
+              <code>undefined</code>, then reject <var>promise</var> with the
+              <var>error</var> value.
             </li>
-            <li>When the <code>reject()</code> method of an element of
-            <var>readerpromises</var> set is invoked, <var>countdown</var> is
-            decremented, and <var>errors</var> is incremented. If
-            <var>countdown</var> is 0 then invoke <var>resolver</var>'s <code>
-              reject()</code> method with an <a>SEError</a> object.
+            <li>When a <var>readerpromises</var> element is rejected,
+            <var>countdown</var> is decremented. If <var>error</var> is <code>
+              undefined</code> then set it to the rejected value. If
+              <var>countdown</var> is 0 then reject <var>promise</var> with
+              <var>error</var> value.
             </li>
           </ol>
         </dd>
@@ -643,7 +842,7 @@
         <a>Reader</a> Interface
       </h2>
       <p>
-        Readers connected to this device are accessible though the
+        Readers connected to this device are accessible through the
         <a>Reader</a> interface. A reader is the connector to a secure element.
         Given the removable nature of some secure elements, a reader may or may
         not have a secure element present. A reader may have at most one
@@ -687,26 +886,20 @@
           element.
         </dd>
         <dt>
-          Promise&amp;lt;Session> openSession()
+          Promise&amp;lt;Session&gt; openSession()
         </dt>
         <dd>
           This method establishes a communication link with a secure element.
           There may be several sessions opened at the same time, hence a
           session MUST NOT lock access to the secure element.
-          <div class="note">
-            See <a href="#note-promise">note on <code>Promise</code></a>
-          </div>
         </dd>
         <dt>
-          Promise&amp;lt;Reader> close()
+          Promise&amp;lt;Reader&gt; close()
         </dt>
         <dd>
           This method closes all sessions opened by this reader, and their
           descendent <a>Channel</a> objects. Invoking <code>close()</code>
           method on an already closed reader is an idempotent operation.
-          <div class="note">
-            See <a href="#note-promise">note on <code>Promise</code></a>
-          </div>
         </dd>
       </dl>
       <!-- - - - - - - - - - - - Enum SecureElementType - - - - - - - - - -->
@@ -791,7 +984,9 @@
         <a>Session</a> Interface
       </h2>
       <p>
-        The <a>Session</a> interface provides ...
+        A <a>Session</a> represent a connection session to one of the Secure
+        Elements available on the device. These objects can be used to get a
+        communication channel with an application hosted by the Secure Element.
       </p>
       <dl title="interface Session" class="idl">
         <dt>
@@ -803,15 +998,43 @@
           provide one.
         </dd>
         <dt>
-          Promise&amp;lt;Channel> openBasicChannel()
+          Promise&amp;lt;Channel&gt; openBasicChannel()
         </dt>
         <dd>
-          This methods opens a <a>basic channel</a> to communicate with a
-          secure element application. Once this channel has been opened by an
-          application, it is considered to be "locked" to other applications:
-          any other call to this method will fail until this <a>basic
-          channel</a> is closed. Some secure elements might always deny opening
-          a basic channel.
+          <p>
+            This methods opens a <a>basic channel</a> to communicate with a
+            secure element application. Once this channel has been opened by an
+            application, it is considered to be "locked" to other applications:
+            any other call to this method will fail with
+            <code>SENoChannelException</code> error until this <a>basic
+            channel</a> is closed. Some secure elements might always deny
+            opening a basic channel.
+          </p>
+          <p>
+            If the <code>aid</code> parameter is not null, the underlying
+            implementation of this operation MUST send to the secure element a
+            SELECT command, as defined in [[!ISO7816-4]], with following header
+            values:
+          </p>
+          <ul>
+            <li>CLA = ‘0x00’
+            </li>
+            <li>INS = ‘0xA4’
+            </li>
+            <li>P1 =’0x04’ (Select by DF name/application identifier)
+            </li>
+            <li>P2 =’0x00’ (First or only occurrence)
+            </li>
+          </ul>
+          <p>
+            If <code>aid</code> is null, then no SELECT is sent, the channel is
+            opened on the default selected secure element application.
+          </p>
+          <p>
+            This method will trigger the <a>Access Control Enforcer</a> to
+            check the requesting application is authorized to open such
+            channel.
+          </p>
           <dl class='parameters'>
             <dt>
               octet[] aid
@@ -833,17 +1056,45 @@
               </ul>
             </dd>
           </dl>
-          <div class="note">
-            See <a href="#note-promise">note on <code>Promise</code></a>
-          </div>
         </dd>
         <dt>
-          Promise&amp;lt;Channel> openLogicalChannel()
+          Promise&amp;lt;Channel&gt; openLogicalChannel()
         </dt>
         <dd>
-          This methods opens a <a>logical channel</a> to communicate with a
-          secure element application. It is up to the secure element to choose
-          which logical channel will be used.
+          <p>
+            This methods opens a <a>logical channel</a> to communicate with a
+            secure element application. It is up to the application runtime to
+            choose which logical channel will be used. If no more logical
+            channel is available, this method MUST fail with
+            <code>SENoChannelException</code> error.
+          </p>
+          <p>
+            If the <code>aid</code> parameter is not null, the underlying
+            implementation of this operation MUST send to the secure element a
+            SELECT command, as defined in [[!ISO7816-4]], with following header
+            values:
+          </p>
+          <ul>
+            <li>CLA = ‘0x01’ to ‘0x03’, ‘0x40 to 0x4F’ (this value
+            is chosen by the <code>openLogicalChannel</code> method
+            implementation to avoid collision with previously opened channels)
+            </li>
+            <li>INS = ‘0xA4’
+            </li>
+            <li>P1 =’0x04’ (Select by DF name/application identifier)
+            </li>
+            <li>P2 =’0x00’ (First or only occurrence)
+            </li>
+          </ul>
+          <p>
+            If <code>aid</code> is null, then no SELECT is sent, the channel is
+            opened on the default selected secure element application.
+          </p>
+          <p>
+            This method will trigger the <a>Access Control Enforcer</a> to
+            check the requesting application is authorized to open such
+            channel.
+          </p>
           <dl class='parameters'>
             <dt>
               octet[] aid
@@ -865,21 +1116,15 @@
               </ul>
             </dd>
           </dl>
-          <div class="note">
-            See <a href="#note-promise">note on <code>Promise</code></a>
-          </div>
         </dd>
         <dt>
-          Promise&amp;lt;Session> close()
+          Promise&amp;lt;Session&gt; close()
         </dt>
         <dd>
-          Closes the connection with the Secure Element. This will close any
-          channels opened by this application with this Secure Element.
+          Closes the connection session to the Secure Element. This will close
+          any channels opened by this application with this Secure Element.
           Invoking <code>close()</code> method on an already closed session is
           an idempotent operation.
-          <div class="note">
-            See <a href="#note-promise">note on <code>Promise</code></a>
-          </div>
         </dd>
       </dl>
     </section><!-- Interface Session -->
@@ -889,7 +1134,10 @@
         <a>Channel</a> Interface
       </h2>
       <p>
-        The <a>Channel</a> interface provides ...
+        A <a>Channel</a> represents an ISO/IEC 7816-4 channel opened to a
+        Secure Element. It can be either a logical channel or the basic
+        channel. It can be used to send commands to a Secure Element
+        application.
       </p>
       <dl title="interface Channel" class="idl">
         <dt>
@@ -909,26 +1157,23 @@
           <a>AID</a> was provided in the open channel operation).
         </dd>
         <dt>
-          Promise&amp;lt;ArrayBufferView> selectNext()
+          Promise&amp;lt;ArrayBufferView&gt; selectNext()
         </dt>
         <dd>
           Updates the targeted application of this channel to be the next one
           matching the partial <a>Application Identifier</a> passed when this
-          channel was open. Invoking this method MUST fail with
-          <code>invalid_state</code> error if this channel was not open with a
-          partial AID, or with the <code>no_application</code> error if there
-          is no next application matching that partial AID. In that case the
-          application associated to this channel is unchanged. If a next
-          application has been found and associated to this channel, this
-          operation succeeds and returns the secure element's response. This
-          response value MUST be assigned to the <code>openResponse</code>
-          attribute.
-          <div class="note">
-            See <a href="#note-promise">note on <code>Promise</code></a>
-          </div>
+          channel was open. Invoking this method MUST fail with an
+          <code>SEInvalidStateException</code> error if this channel was not
+          open with a partial AID, or with an
+          <code>SENoApplicationException</code> error if there is no next
+          application matching that partial AID. In that case the application
+          associated to this channel is unchanged. If a next application has
+          been found and associated to this channel, this operation succeeds
+          and returns the secure element's response. This response value MUST
+          be assigned to the <code>openResponse</code> attribute.
         </dd>
         <dt>
-          Promise&amp;lt;SEResponse> transmit()
+          Promise&amp;lt;SEResponse&gt; transmit()
         </dt>
         <dd>
           <p>
@@ -937,6 +1182,11 @@
             calls to this method: a command must not be sent to a secure
             element while a response is still pending on any channel from this
             same secure element.
+          </p>
+          <p>
+            This method will trigger the <a>Access Control Enforcer</a> to
+            check the requesting application is authorized to send such command
+            on this channel.
           </p>
           <p>
             The channel information in the <a>class byte</a> in the <a>APDU
@@ -960,12 +1210,9 @@
               The command to send to the secure element application.
             </dd>
           </dl>
-          <div class="note">
-            See <a href="#note-promise">note on <code>Promise</code></a>
-          </div>
         </dd>
         <dt>
-          Promise&amp;lt;ArrayBufferView> transmit()
+          Promise&amp;lt;ArrayBufferView&gt; transmit()
         </dt>
         <dd>
           <p>
@@ -975,6 +1222,11 @@
             implementation of this method MUST set the logical channel in the
             <a>class byte</a> of the command so that it fits the channel
             allocated to this <a>Channel</a> object.
+          </p>
+          <p>
+            This method will trigger the <a>Access Control Enforcer</a> to
+            check the requesting application is authorized to send such command
+            on this channel.
           </p>
           <dl class='parameters'>
             <dt>
@@ -988,7 +1240,7 @@
           </dl>
         </dd>
         <dt>
-          Promise&amp;lt;Channel> close()
+          Promise&amp;lt;Channel&gt; close()
         </dt>
         <dd>
           This method closes this session object. If a transmit operation is
@@ -996,9 +1248,6 @@
           terminate that asynchronous operation with a <code>closed</code>
           error status. Invoking <code>close()</code> method on an already
           closed channel is an idempotent operation.
-          <div class="note">
-            See <a href="#note-promise">note on <code>Promise</code></a>
-          </div>
         </dd>
       </dl>
     </section><!-- Interface Channel -->
@@ -1110,74 +1359,73 @@
         </dd>
       </dl>
     </section><!-- Interface SEResponse -->
-    <!-- - - - - - - - - - - - - -  SEError - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - -  Errors - - - - - - - - - - - - - - - - -->
     <section>
       <h2>
-        The <code>SEError</code> enum
+        Error types
       </h2>
-      <div class="note">
-        From latest <a>Promise</a> specification, it seems this error type
-        should extend ECMAScript Error type
-      </div>
       <p>
         In the interfaces defined above, some method return a <a>Promise</a>
         object. If an error occurs during the execution of any of these
         methods, the <code>reject()</code> method of promise's resolver will be
-        invoked with an error value of the type <a>SEError</a>:
+        invoked with an error value of one of the following <a>DOMException</a>
+        subtypes:
       </p>
-      <dl title="enum SEError" class="idl">
+      <dl title="errors">
         <dt>
-          unknown
+          SESecurityException
         </dt>
         <dd>
-          Internal error, no further details available
+          The requested operation does not match the access conditions of the
+          application, as defined in <a href="#access-control">Access
+          Control</a> section
         </dd>
         <dt>
-          io
+          SEIoException
         </dt>
         <dd>
           Communication error
         </dd>
         <dt>
-          security
-        </dt>
-        <dd>
-          A security condition was not fulfilled
-        </dd>
-        <dt>
-          invalid_state
+          SEInvalidStateException
         </dt>
         <dd>
           The target object was not in the proper state to execute the
           operation
         </dd>
         <dt>
-          invalid_value
+          SEInvalidValueException
         </dt>
         <dd>
           The method was invoked with an incorrect parameter value
         </dd>
         <dt>
-          no_channel
+          SENoChannelException
         </dt>
         <dd>
           Tentative to open a channel failed because no channel is available
         </dd>
         <dt>
-          no_application
+          SENoApplicationException
         </dt>
         <dd>
           The requested application was not found on the secure element
         </dd>
         <dt>
-          closed
+          SEClosedException
         </dt>
         <dd>
           The operation could not be fulfilled because the target object is
           closed
         </dd>
+        <dt>
+          SEUnknownException
+        </dt>
+        <dd>
+          Internal error, no further details available
+        </dd>
       </dl>
-    </section><!-- SEError -->
+    </section><!-- Errors -->
     <!-- - - - - - - - - - - - - -  Examples  - - - - - - - - - - - - - - - - -->
     <section>
       <h2>
@@ -1187,22 +1435,19 @@
         The javascript code excerpt below shows how a web application can wait
         for a card to be present, and send it an APDU command:
       </p>
-      <div class="note">
-        See <a href="#note-promise">note on <code>Promise</code></a>
-      </div>
       <pre class="example highlight">
 
             // my application identifier
             var myAppId = ...;
             // my application command
             var myAppCmd = new SECommand(...);
-            
+
             // get secure element manager
             var seMgr = navigator.secureElementManager;
-            
+
             // register sepresent event handler
             seMgr.onsepresent = function(reader) {
-            
+
               // open session
               reader.openSession()
               .then(
@@ -1256,7 +1501,7 @@
         Acknowledgements
       </h2>
       <p>
-        Thanks...
+        Thanks to contributors and reviewers...
       </p>
     </section>
   </body>
