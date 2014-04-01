@@ -1063,7 +1063,7 @@
         <dd>
           <p>
             This methods opens a <a>logical channel</a> to communicate with a
-            secure element application. It is up to the application runtime to
+            secure element application. It is up to the secure element to
             choose which logical channel will be used. If no more logical
             channel is available, this method MUST fail with
             <code>SENoChannelException</code> error.
@@ -1075,9 +1075,8 @@
             values:
           </p>
           <ul>
-            <li>CLA = ‘0x01’ to ‘0x03’, ‘0x40 to 0x4F’ (this value
-            is chosen by the <code>openLogicalChannel</code> method
-            implementation to avoid collision with previously opened channels)
+            <li>CLA = ‘0x01’ to ‘0x03’, ‘0x40 to 0x4F’ (as chosen
+            by the secure element)
             </li>
             <li>INS = ‘0xA4’
             </li>
