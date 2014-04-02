@@ -600,42 +600,30 @@
           certificate-based identifier as defined in [[!GP-AC]]:
         </p>
         <ul>
-          <li>The web application MUST have a web application <a>manifest</a>
-          file, as defined in [[!MANIFEST]], with the <dfn id=
-          "member-se_signature_url"><code>se_author_signature</code></dfn>
-          member, which value MUST be the relative URI to the <a>author
-          signature file</a>.
+          <li>The web application MUST be associated with a web application <a>
+            manifest</a> file, as defined in [[!MANIFEST]]. This manifest MUST
+            contain a <dfn id=
+            "member-se_signature_url"><code>se_author_signature</code></dfn>
+            member, which value MUST be the relative URI to the <a>author
+            signature file</a>.
           </li>
-          <li>The <a>author signature file</a> is an <a href=
+          <li>The <a>author signature file</a> MUST be an <a href=
           "http://www.w3.org/TR/widgets-digsig/#author-signatures">author
-          signature</a> as defined in [[!WDSIG]]. This file is an XML document,
-          deployed with the web application (either as a resource of the
-          packaged application, or as an online resource for hosted
-          application). The signature is computed using one of the following
-          input data:
-            <ul>
-              <li>For packaged applications: the exhaustive list of the
-              packaged application resources, excluding the signature file
-              itself.
-              </li>
-              <li>For hosted applications: an absolute URI representing the web
-              application's top URL in the URI hierarchy. All application
-              resources, including the manifest file, MUST be located
-              hierarchically below this URI. Consequently, any resource which
-              URL is not hierarchically below this URI will not be considered
-              part of this application, and hence not eligible to benefit from
-              its potentially granted access to the Secure Element API.
-                <p class="note">
-                  It is expected that the manifest will include a "scope"
-                  member, as discussed <a href=
-                  "https://github.com/slightlyoff/ServiceWorker/issues/137">here</a>
-                  and <a href=
-                  "https://github.com/w3c/manifest/issues/114">here</a>, and
-                  this scope should be the signed data. Alternatively we could
-                  sign the whole manifest.
-                </p>
-              </li>
-            </ul>
+          signature</a> as defined in [[!WDSIG]]. The signed data MUST be the
+          absolute URI of the application's top-level document. Any resource
+          which URL is not hierarchically below this URI MUST NOT not be
+          considered part of this application, and hence not eligible to
+          benefit from its potentially granted access to the Secure Element
+          API.
+            <p class="note">
+              It is possible that the manifest will include a "scope" member,
+              as discussed <a href=
+              "https://github.com/slightlyoff/ServiceWorker/issues/137">here</a>
+              and <a href=
+              "https://github.com/w3c/manifest/issues/114">here</a>. If this
+              happens, this scope could be the signed data. Alternatively we
+              could sign the whole manifest.
+            </p>
           </li>
           <li>The <a>author certificate</a> is the certificate used to compute
           the digital signature, and its value is included in the <a>author
@@ -655,8 +643,7 @@
           </li>
           <li>The SHA-1 hash of the <a>author certificate</a> is used as the
           device application identifier in the access control verification
-          process, following the GlobalPlatform Access Control process defined
-          for Rich Execution Environment.
+          process, following the GlobalPlatform Access Control process.
           </li>
         </ul>
         <p>
@@ -696,10 +683,10 @@
               </li>
             </ul>
           </li>
-          <li>The user MUST not be able to bypass these rules. Some browsers
+          <li>The user MUST NOT be able to bypass these rules. Some browsers
           offer users to define "exceptions" to allow connections to a HTTPS
           URL even if SSL server certificate is invalid. Such exception MUST
-          not be used to allow access to the Secure Element API.
+          NOT be used to allow access to the Secure Element API.
           </li>
         </ul>
       </section>
@@ -1178,7 +1165,7 @@
           <p>
             This method transmits a command to the secure element. The user
             agent MUST ensure the synchronisation between all the concurrent
-            calls to this method: a command must not be sent to a secure
+            calls to this method: a command MUST NOT be sent to a secure
             element while a response is still pending on any channel from this
             same secure element.
           </p>
