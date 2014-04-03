@@ -388,7 +388,8 @@
       </p>
       <p>
         [[!WDSIG]]: The <dfn>author signature file</dfn> and <dfn>author
-        certificate</dfn>
+        certificate</dfn>, as well of the concept of <dfn>generating a digital
+        signature</dfn>
       </p>
       <p>
         [[!MANIFEST]]: The web application <dfn>manifest</dfn> file
@@ -609,21 +610,25 @@
           </li>
           <li>The <a>author signature file</a> MUST be an <a href=
           "http://www.w3.org/TR/widgets-digsig/#author-signatures">author
-          signature</a> as defined in [[!WDSIG]]. The signed data MUST be the
-          absolute URI of the application's top-level document. Any resource
-          which URL is not hierarchically below this URI MUST NOT not be
-          considered part of this application, and hence not eligible to
-          benefit from its potentially granted access to the Secure Element
-          API.
-            <p class="note">
-              It is possible that the manifest will include a "scope" member,
-              as discussed <a href=
-              "https://github.com/slightlyoff/ServiceWorker/issues/137">here</a>
-              and <a href=
-              "https://github.com/w3c/manifest/issues/114">here</a>. If this
-              happens, this scope could be the signed data. Alternatively we
-              could sign the whole manifest.
-            </p>
+          signature</a> as defined in [[!WDSIG]]. The signature algorithm
+          depends on the application URI scheme:
+            <ul>
+              <li>For applications with an <code>app</code> URI scheme, the
+              signed data MUST be the complete set of application files,
+              excluding signature files themselves. The algorithm used for
+              <a href=
+              "http://www.w3.org/TR/widgets-digsig/#generating-a-digital-signature">
+                generating a digital signature</a> is defined in [[!WDSIG]].
+                Resources not listed in the signature file MUST NOT not be
+                granted the application's access to the Secure Element API.
+              </li>
+              <li>For applications with an <code>https</code> URI scheme, the
+              signed data MUST be the absolute URI of the application's
+              top-level document. Resources which URL is not hierarchically
+              below this URI MUST NOT not be granted the application's access
+              to the Secure Element API.
+              </li>
+            </ul>
           </li>
           <li>The <a>author certificate</a> is the certificate used to compute
           the digital signature, and its value is included in the <a>author
@@ -660,10 +665,9 @@
           Additional security rules
         </h3>
         <p>
-          Because the <a>author signature file</a> does not sign the full list
-          of resources for hosted web applications, the origin and integrity of
-          these resources must be guaranteed using the following security
-          restriction:
+          When an application is not accessed using an <code>app</code> URI,
+          the origin and integrity of its resources must be guaranteed using
+          the following security restriction:
         </p>
         <ul>
           <li>To be eligible to gain access to the Secure Element API, a hosted
@@ -674,7 +678,8 @@
             <ul>
               <li>Its subject MUST match the hosting domain name.
               </li>
-              <li>Its validity dates MUST include the current date.
+              <li>Its validity dates MUST include the current date provided by
+              the execution runtime.
               </li>
               <li>The issuance signature chain MUST be valid.
               </li>
