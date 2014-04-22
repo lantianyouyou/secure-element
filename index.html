@@ -368,9 +368,7 @@
       <p>
         [[!HTML]]: <dfn><a href=
         "http://www.whatwg.org/specs/web-apps/current-work/#event-handlers">event
-        handler</a></dfn>, <dfn><a href=
-        "http://www.whatwg.org/specs/web-apps/current-work/#origin">origin</a></dfn>
-        concept.
+        handler</a></dfn>.
       </p>
       <p>
         [[!DOM4]]: the <dfn><a href=
@@ -385,6 +383,11 @@
         [[!ES6]]: the <dfn><a href=
         "http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects">
         <code>Promise</code></a></dfn> object type.
+      </p>
+      <p>
+        [[!RFC6454]]: The concepts of <dfn>origin</dfn> and
+        <dfn>same-origin</dfn>, as well as the algorithm for serializing an
+        origin.
       </p>
       <p>
         [[!WDSIG]]: The <dfn>author signature file</dfn> and <dfn>author
@@ -623,10 +626,9 @@
                 granted the application's access to the Secure Element API.
               </li>
               <li>For applications with an <code>https</code> URI scheme, the
-              signed data MUST be the absolute URI of the application's
-              top-level document. Resources which URL is not hierarchically
-              below this URI MUST NOT not be granted the application's access
-              to the Secure Element API.
+              signed data MUST be the [[!RFC6454]] serialization of the
+              <a>origin</a> to be granted access. Only applications that are
+              <a>same-origin</a> will be granted access.
               </li>
             </ul>
           </li>
