@@ -716,7 +716,7 @@
           the user agent MUST return the <a>SecureElementManager</a> object
           that provides access to available secure element readers. If the user
           agent doesn't support secure element features, it MUST then return
-          <code>null</code>.
+          <code>undefined</code>.
         </dd>
       </dl>
     </section><!-- Interface Navigator -->
@@ -798,7 +798,7 @@
             </li>
             <li>Let <var>countdown</var> be the number of readers in the <code>
               readers</code> attribute, and <var>error</var> an object
-              initialized to <code>undefined</code>.
+              initially <code>undefined</code>.
             </li>
             <li>Invoke <code>close()</code> method on each <a>Reader</a> object
             in the array returned by the <code>readers</code> attribute.
@@ -1254,7 +1254,7 @@
         can be sent to a secure element.
       </p>
       <dl title=
-      "[Constructor(octet data, octet ins, octet p1, octet p2, optional ArrayBufferView data, optional octet le)] interface SECommand"
+      "[Constructor(octet cla, octet ins, octet p1, octet p2, optional ArrayBufferView data, optional octet le)] interface SECommand"
       class="idl">
         <dt>
           attribute octet cla
