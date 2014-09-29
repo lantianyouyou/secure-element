@@ -648,9 +648,16 @@
               </li>
             </ul>
           </li>
-          <li>The SHA-1 hash of the <a>author certificate</a> is used as the
+          <li>The SHA-1 digest of the <a>author certificate</a> is used as the
           device application identifier in the access control verification
           process, following the GlobalPlatform Access Control process.
+            <div class="note">
+              The SHA-1 hash function is used here because the GlobalPlatform
+              Access Control specification for now only supports 20 bytes long
+              identifiers. A stronger algorithm will be used as soon as
+              GlobalPlatform updates its specification to support longer
+              values.
+            </div>
           </li>
         </ul>
         <p>
