@@ -991,6 +991,13 @@
       </p>
       <dl title="interface Session" class="idl">
         <dt>
+          readonly attribute Reader reader
+        </dt>
+        <dd>
+          This attribute MUST return the reader object from which this session
+          object was created.
+        </dd>
+        <dt>
           readonly attribute octet[] atr
         </dt>
         <dd>
@@ -1140,6 +1147,13 @@
         application.
       </p>
       <dl title="interface Channel" class="idl">
+        <dt>
+          readonly attribute Session session
+        </dt>
+        <dd>
+          This attribute MUST return the session object from which this Channel
+          object was created.
+        </dd>
         <dt>
           readonly attribute boolean isBasicChannel
         </dt>
@@ -1314,6 +1328,13 @@
       <dl title="[Constructor(ArrayBufferView raw)] interface SEResponse"
       class="idl">
         <dt>
+          readonly attribute Channel channel
+        </dt>
+        <dd>
+          This attribute MUST return the channel object that was used to
+          transmit the command which triggered this response object.
+        </dd>
+        <dt>
           readonly attribute octet sw1
         </dt>
         <dd>
@@ -1471,6 +1492,7 @@
                     // this might be an error
                     // ...
                   }
+                  response.channel.session.reader.close();
                 }
 
               );
@@ -1479,8 +1501,7 @@
 </pre>
       <p>
         For simplicity and readability reasons, the code above omits the error
-        handling and closing operations that would have to be done in a real
-        web application.
+        handling that would have to be done in a real application.
       </p>
     </section><!-- Examples -->
     <!-- - - - - - - - - - - - - -  Changes - - - - - - - - - - - - - - - - -->
