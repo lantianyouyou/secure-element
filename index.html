@@ -1208,7 +1208,7 @@
             byte</a> of the command to ensure the APDU is transported on this
             channel. To ensure the invoking web application does not exit from
             the scope of this channel, the user agent MUST reject the following
-            commands:
+            commands with <code>SEInvalidValueException</code> error value:
           </p>
           <ul>
             <li>MANAGE_CHANNEL (INS=0x70)
