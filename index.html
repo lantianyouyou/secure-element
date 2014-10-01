@@ -715,7 +715,7 @@
       </p>
       <dl title="partial interface Navigator" class="idl">
         <dt>
-          readonly attribute SecureElementManager secureElementManager
+          readonly attribute SecureElementManager? secureElementManager
         </dt>
         <dd>
           When getting the <dfn id=
@@ -751,7 +751,7 @@
           become available, while others may be disconnected.
         </dd>
         <dt>
-          attribute EventHandler onsepresent
+          attribute EventHandler? onsepresent
         </dt>
         <dd>
           Event handler for the SE-present event. This event MUST be triggered
@@ -770,7 +770,7 @@
           </ul>
         </dd>
         <dt>
-          attribute EventHandler onseremoval
+          attribute EventHandler? onseremoval
         </dt>
         <dd>
           Event handler for the SE-removal event. This event MUST be triggered
@@ -996,7 +996,7 @@
           object was created.
         </dd>
         <dt>
-          readonly attribute Uint8Array atr
+          readonly attribute Uint8Array? atr
         </dt>
         <dd>
           This attribute MUST return the <a>Answer to Reset</a> provided by the
@@ -1159,7 +1159,7 @@
           This attribute MUST return this channel type.
         </dd>
         <dt>
-          readonly attribute SEResponse openResponse
+          readonly attribute SEResponse? openResponse
         </dt>
         <dd>
           This attribute MUST return the secure element's response to the
@@ -1323,7 +1323,7 @@
           Second octet of the <a>parameter bytes</a>
         </dd>
         <dt>
-          attribute Uint8Array data
+          attribute Uint8Array? data
         </dt>
         <dd>
           <a>Data field bytes</a>, or <code>null</code> if command has no data
