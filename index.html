@@ -784,7 +784,7 @@
           <a>SEClosedException</a> error.
         </dd>
         <dt>
-          Promise&lt;SecureElementManager&gt; close()
+          Promise&lt;void&gt; close()
         </dt>
         <dd>
           <p>
@@ -800,8 +800,7 @@
             asynchronously.
             </li>
             <li>If the <code>close()</code> method has already been called on
-            this object, then resolve <var>promise</var> with this
-            <a>SecureElementManager</a> object.
+            this object, then resolve <var>promise</var>.
             </li>
             <li>Let <var>countdown</var> be the number of readers in the <code>
               readers</code> attribute, and <var>error</var> an object
@@ -822,10 +821,9 @@
             <li>When a <var>readerpromises</var> element is fulfilled,
             <var>countdown</var> is decremented. If <var>countdown</var> is 0
             and <var>error</var> is <code>undefined</code>, then resolve <var>
-              promise</var> with this <a>SecureElementManager</a> object. If
-              <var>countdown</var> is 0 and <var>error</var> is not
-              <code>undefined</code>, then reject <var>promise</var> with the
-              <var>error</var> value.
+              promise</var>. If <var>countdown</var> is 0 and <var>error</var>
+              is not <code>undefined</code>, then reject <var>promise</var>
+              with the <var>error</var> value.
             </li>
             <li>When a <var>readerpromises</var> element is rejected,
             <var>countdown</var> is decremented. If <var>error</var> is <code>
@@ -895,7 +893,7 @@
           session MUST NOT lock access to the secure element.
         </dd>
         <dt>
-          Promise&lt;Reader&gt; close()
+          Promise&lt;void&gt; close()
         </dt>
         <dd>
           This method closes all sessions opened by this reader, and their
@@ -1125,7 +1123,7 @@
           </dl>
         </dd>
         <dt>
-          Promise&lt;Session&gt; close()
+          Promise&lt;void&gt; close()
         </dt>
         <dd>
           Closes the connection session to the Secure Element. This will close
@@ -1253,7 +1251,7 @@
           </dl>
         </dd>
         <dt>
-          Promise&lt;Channel&gt; close()
+          Promise&lt;void&gt; close()
         </dt>
         <dd>
           This method closes this session object. If a transmit operation is
