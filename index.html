@@ -1141,7 +1141,7 @@
         <a>Channel</a> Interface
       </h2>
       <p>
-        A <a>Channel</a> represents an ISO/IEC 7816-4 channel opened to a
+        A <a>Channel</a> represents an [[!ISO7816-4]] channel opened to a
         Secure Element. It can be either a logical channel or the basic
         channel. It can be used to send commands to a Secure Element
         application.
@@ -1155,11 +1155,10 @@
           object was created.
         </dd>
         <dt>
-          readonly attribute boolean isBasicChannel
+          readonly attribute ChannelType channelType
         </dt>
         <dd>
-          This attribute must return TRUE if this channel is a <a>basic
-          channel</a>, it MUST return FALSE otherwise.
+          This attribute MUST return this channel type.
         </dd>
         <dt>
           readonly attribute SEResponse openResponse
@@ -1263,7 +1262,31 @@
           error status. Invoking <code>close()</code> method on an already
           closed channel is an idempotent operation.
         </dd>
-      </dl>
+      </dl><!-- - - - - - - - - - - - Enum ChannelType - - - - - - - - - -->
+      <section>
+        <h2>
+          <a>ChannelType</a> enum
+        </h2>
+        <p>
+          The <a>ChannelType</a> enum identifies the type of the secure element
+          channel.
+        </p>
+        <dl title="enum ChannelType" class="idl">
+          <dt>
+            basic
+          </dt>
+          <dd>
+            Basic channel, as defined in [[!ISO7816-4]] (channel number 0).
+          </dd>
+          <dt>
+            logical
+          </dt>
+          <dd>
+            Logical channel, as defined in [[!ISO7816-4]] (channel number &gt;
+            0).
+          </dd>
+        </dl>
+      </section><!-- Enum ChannelType -->
     </section><!-- Interface Channel -->
     <!-- - - - - - - - - - - - Interface SECommand - - - - - - - - - -->
     <section>
@@ -1325,8 +1348,8 @@
         The <a>SEResponse</a> interface represents an <a>APDU response</a>
         received from a secure element.
       </p>
-      <dl title="[Constructor(Uint8Array raw)] interface SEResponse"
-      class="idl">
+      <dl title="[Constructor(Uint8Array raw)] interface SEResponse" class=
+      "idl">
         <dt>
           readonly attribute Channel channel
         </dt>
