@@ -998,7 +998,7 @@
           object was created.
         </dd>
         <dt>
-          readonly attribute octet[] atr
+          readonly attribute Uint8Array atr
         </dt>
         <dd>
           This attribute MUST return the <a>Answer to Reset</a> provided by the
@@ -1045,7 +1045,7 @@
           </p>
           <dl class='parameters'>
             <dt>
-              octet[] aid
+              Uint8Array aid
             </dt>
             <dd>
               This parameter value MUST either be:
@@ -1104,7 +1104,7 @@
           </p>
           <dl class='parameters'>
             <dt>
-              octet[] aid
+              Uint8Array aid
             </dt>
             <dd>
               This parameter value MUST either be:
@@ -1162,7 +1162,7 @@
           channel</a>, it MUST return FALSE otherwise.
         </dd>
         <dt>
-          readonly attribute ArrayBufferView openResponse
+          readonly attribute SEResponse openResponse
         </dt>
         <dd>
           This attribute MUST return the secure element's response to the
@@ -1171,7 +1171,7 @@
           <a>AID</a> was provided in the open channel operation).
         </dd>
         <dt>
-          Promise&lt;ArrayBufferView&gt; selectNext()
+          Promise&lt;SEResponse&gt; selectNext()
         </dt>
         <dd>
           Updates the targeted application of this channel to be the next one
@@ -1226,7 +1226,7 @@
           </dl>
         </dd>
         <dt>
-          Promise&lt;ArrayBufferView&gt; transmit()
+          Promise&lt;Uint8Array&gt; transmit()
         </dt>
         <dd>
           <p>
@@ -1244,7 +1244,7 @@
           </p>
           <dl class='parameters'>
             <dt>
-              ArrayBufferView cmd
+              Uint8Array cmd
             </dt>
             <dd>
               The raw command to send to the secure element application. The
@@ -1275,7 +1275,7 @@
         can be sent to a secure element.
       </p>
       <dl title=
-      "[Constructor(octet cla, octet ins, octet p1, octet p2, optional ArrayBufferView data, optional octet le)] interface SECommand"
+      "[Constructor(octet cla, octet ins, octet p1, octet p2, optional Uint8Array data, optional octet le)] interface SECommand"
       class="idl">
         <dt>
           attribute octet cla
@@ -1302,7 +1302,7 @@
           Second octet of the <a>parameter bytes</a>
         </dd>
         <dt>
-          attribute ArrayBufferView data
+          attribute Uint8Array data
         </dt>
         <dd>
           <a>Data field bytes</a>, or <code>null</code> if command has no data
@@ -1325,7 +1325,7 @@
         The <a>SEResponse</a> interface represents an <a>APDU response</a>
         received from a secure element.
       </p>
-      <dl title="[Constructor(ArrayBufferView raw)] interface SEResponse"
+      <dl title="[Constructor(Uint8Array raw)] interface SEResponse"
       class="idl">
         <dt>
           readonly attribute Channel channel
@@ -1347,7 +1347,7 @@
           Second octet of response's <a>status word</a>
         </dd>
         <dt>
-          readonly attribute ArrayBufferView data
+          readonly attribute Uint8Array data
         </dt>
         <dd>
           The response's <a>data field bytes</a>
