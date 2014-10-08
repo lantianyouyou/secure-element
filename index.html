@@ -674,7 +674,7 @@
       </p>
       <dl title="partial interface Navigator" class="idl">
         <dt>
-          readonly attribute SecureElementManager secureElementManager
+          readonly attribute SecureElementManager? secureElementManager
         </dt>
         <dd>
           When getting the <dfn id=
@@ -710,7 +710,7 @@
           become available, while others may be disconnected.
         </dd>
         <dt>
-          attribute EventHandler onsepresent
+          attribute EventHandler? onsepresent
         </dt>
         <dd>
           Event handler for the SE-present event. This event MUST be triggered
@@ -729,7 +729,7 @@
           </ul>
         </dd>
         <dt>
-          attribute EventHandler onseremoval
+          attribute EventHandler? onseremoval
         </dt>
         <dd>
           Event handler for the SE-removal event. This event MUST be triggered
@@ -743,7 +743,7 @@
           <a>SEClosedException</a> error.
         </dd>
         <dt>
-          Promise&lt;SecureElementManager&gt; close()
+          Promise&lt;void&gt; close()
         </dt>
         <dd>
           <p>
@@ -759,8 +759,7 @@
             asynchronously.
             </li>
             <li>If the <code>close()</code> method has already been called on
-            this object, then resolve <var>promise</var> with this
-            <a>SecureElementManager</a> object.
+            this object, then resolve <var>promise</var>.
             </li>
             <li>Let <var>countdown</var> be the number of readers in the <code>
               readers</code> attribute, and <var>error</var> an object
@@ -781,10 +780,9 @@
             <li>When a <var>readerpromises</var> element is fulfilled,
             <var>countdown</var> is decremented. If <var>countdown</var> is 0
             and <var>error</var> is <code>undefined</code>, then resolve <var>
-              promise</var> with this <a>SecureElementManager</a> object. If
-              <var>countdown</var> is 0 and <var>error</var> is not
-              <code>undefined</code>, then reject <var>promise</var> with the
-              <var>error</var> value.
+              promise</var>. If <var>countdown</var> is 0 and <var>error</var>
+              is not <code>undefined</code>, then reject <var>promise</var>
+              with the <var>error</var> value.
             </li>
             <li>When a <var>readerpromises</var> element is rejected,
             <var>countdown</var> is decremented. If <var>error</var> is <code>
@@ -823,7 +821,7 @@
         </dt>
         <dd>
           This attribute MUST return the name of the reader. This is an
-          arbitrary name set by the system. It MAY be computed based on ready
+          arbitrary name set by the system. It MAY be computed based on reader
           provided data.
         </dd>
         <dt>
@@ -854,7 +852,7 @@
           session MUST NOT lock access to the secure element.
         </dd>
         <dt>
-          Promise&lt;Reader&gt; close()
+          Promise&lt;void&gt; close()
         </dt>
         <dd>
           This method closes all sessions opened by this reader, and their
@@ -957,7 +955,7 @@
           object was created.
         </dd>
         <dt>
-          readonly attribute octet[] atr
+          readonly attribute Uint8Array? atr
         </dt>
         <dd>
           This attribute MUST return the <a>Answer to Reset</a> provided by the
@@ -1004,7 +1002,7 @@
           </p>
           <dl class='parameters'>
             <dt>
-              octet[] aid
+              Uint8Array aid
             </dt>
             <dd>
               This parameter value MUST either be:
@@ -1063,7 +1061,7 @@
           </p>
           <dl class='parameters'>
             <dt>
-              octet[] aid
+              Uint8Array aid
             </dt>
             <dd>
               This parameter value MUST either be:
@@ -1084,7 +1082,7 @@
           </dl>
         </dd>
         <dt>
-          Promise&lt;Session&gt; close()
+          Promise&lt;void&gt; close()
         </dt>
         <dd>
           Closes the connection session to the Secure Element. This will close
@@ -1100,7 +1098,7 @@
         <a>Channel</a> Interface
       </h2>
       <p>
-        A <a>Channel</a> represents an ISO/IEC 7816-4 channel opened to a
+        A <a>Channel</a> represents an [[!ISO7816-4]] channel opened to a
         Secure Element. It can be either a logical channel or the basic
         channel. It can be used to send commands to a Secure Element
         application.
@@ -1114,14 +1112,13 @@
           object was created.
         </dd>
         <dt>
-          readonly attribute boolean isBasicChannel
+          readonly attribute ChannelType channelType
         </dt>
         <dd>
-          This attribute must return TRUE if this channel is a <a>basic
-          channel</a>, it MUST return FALSE otherwise.
+          This attribute MUST return this channel type.
         </dd>
         <dt>
-          readonly attribute ArrayBufferView openResponse
+          readonly attribute SEResponse? openResponse
         </dt>
         <dd>
           This attribute MUST return the secure element's response to the
@@ -1130,7 +1127,7 @@
           <a>AID</a> was provided in the open channel operation).
         </dd>
         <dt>
-          Promise&lt;ArrayBufferView&gt; selectNext()
+          Promise&lt;SEResponse&gt; selectNext()
         </dt>
         <dd>
           Updates the targeted application of this channel to be the next one
@@ -1185,7 +1182,7 @@
           </dl>
         </dd>
         <dt>
-          Promise&lt;ArrayBufferView&gt; transmit()
+          Promise&lt;Uint8Array&gt; transmit()
         </dt>
         <dd>
           <p>
@@ -1203,7 +1200,7 @@
           </p>
           <dl class='parameters'>
             <dt>
-              ArrayBufferView cmd
+              Uint8Array cmd
             </dt>
             <dd>
               The raw command to send to the secure element application. The
@@ -1213,7 +1210,7 @@
           </dl>
         </dd>
         <dt>
-          Promise&lt;Channel&gt; close()
+          Promise&lt;void&gt; close()
         </dt>
         <dd>
           This method closes this session object. If a transmit operation is
@@ -1222,7 +1219,31 @@
           error status. Invoking <code>close()</code> method on an already
           closed channel is an idempotent operation.
         </dd>
-      </dl>
+      </dl><!-- - - - - - - - - - - - Enum ChannelType - - - - - - - - - -->
+      <section>
+        <h2>
+          <a>ChannelType</a> enum
+        </h2>
+        <p>
+          The <a>ChannelType</a> enum identifies the type of the secure element
+          channel.
+        </p>
+        <dl title="enum ChannelType" class="idl">
+          <dt>
+            basic
+          </dt>
+          <dd>
+            Basic channel, as defined in [[!ISO7816-4]] (channel number 0).
+          </dd>
+          <dt>
+            logical
+          </dt>
+          <dd>
+            Logical channel, as defined in [[!ISO7816-4]] (channel number &gt;
+            0).
+          </dd>
+        </dl>
+      </section><!-- Enum ChannelType -->
     </section><!-- Interface Channel -->
     <!-- - - - - - - - - - - - Interface SECommand - - - - - - - - - -->
     <section>
@@ -1234,7 +1255,7 @@
         can be sent to a secure element.
       </p>
       <dl title=
-      "[Constructor(octet cla, octet ins, octet p1, octet p2, optional ArrayBufferView data, optional octet le)] interface SECommand"
+      "[Constructor(octet cla, octet ins, octet p1, octet p2, optional Uint8Array data, optional octet le)] interface SECommand"
       class="idl">
         <dt>
           attribute octet cla
@@ -1261,7 +1282,7 @@
           Second octet of the <a>parameter bytes</a>
         </dd>
         <dt>
-          attribute ArrayBufferView data
+          attribute Uint8Array? data
         </dt>
         <dd>
           <a>Data field bytes</a>, or <code>null</code> if command has no data
@@ -1284,8 +1305,8 @@
         The <a>SEResponse</a> interface represents an <a>APDU response</a>
         received from a secure element.
       </p>
-      <dl title="[Constructor(ArrayBufferView raw)] interface SEResponse"
-      class="idl">
+      <dl title="[Constructor(Uint8Array raw)] interface SEResponse" class=
+      "idl">
         <dt>
           readonly attribute Channel channel
         </dt>
@@ -1306,7 +1327,7 @@
           Second octet of response's <a>status word</a>
         </dd>
         <dt>
-          readonly attribute ArrayBufferView data
+          readonly attribute Uint8Array data
         </dt>
         <dd>
           The response's <a>data field bytes</a>
