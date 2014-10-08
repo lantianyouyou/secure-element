@@ -600,57 +600,15 @@
           The <a>Access Control Enforcer</a> uses an application identifier to
           check whether the application is white listed in <a>Access Rules</a>.
           This identifier needs to be trustworthy so that only authorized
-          application may have a given identifier. Web applications use the
-          certificate-based identifier as defined in [[!GP-AC]]:
+          application may have a given identifier. The web application runtime
+          computes the application identifier using the following algorithm:
         </p>
         <ul>
-          <li>The web application MUST be associated with a web application <a>
-            manifest</a> file, as defined in [[!MANIFEST]]. This manifest MUST
-            contain a <dfn id=
-            "member-se_signature_url"><code>se_author_signature</code></dfn>
-            member, which value MUST be the relative URI to the <a>author
-            signature file</a>.
+          <li>let <code>origin</code> be the ASCII serialization of the web
+          application origin as defined in [[!RFC6454]]
           </li>
-          <li>The <a>author signature file</a> MUST be an <a href=
-          "http://www.w3.org/TR/widgets-digsig/#author-signatures">author
-          signature</a> as defined in [[!WDSIG]]. The signature algorithm
-          depends on the application URI scheme:
-            <ul>
-              <li>For applications with an <code>app</code> URI scheme, the
-              signed data MUST be the complete set of application files,
-              excluding signature files themselves. The algorithm used for
-              <a href=
-              "http://www.w3.org/TR/widgets-digsig/#generating-a-digital-signature">
-                generating a digital signature</a> is defined in [[!WDSIG]].
-                Resources not listed in the signature file MUST NOT not be
-                granted the application's access to the Secure Element API.
-              </li>
-              <li>For applications with an <code>https</code> URI scheme, the
-              signed data MUST be the [[!RFC6454]] serialization of the
-              <a>origin</a> to be granted access. Only applications that are
-              <a>same-origin</a> will be granted access.
-              </li>
-            </ul>
-          </li>
-          <li>The <a>author certificate</a> is the certificate used to compute
-          the digital signature, and its value is included in the <a>author
-          signature file</a>. It MAY be a self-signed certificate. This
-          certificate, and the certificates part of its issuance chain, if any,
-          MUST be valid:
-            <ul>
-              <li>the current date MUST be inside the certificate validity
-              dates;
-              </li>
-              <li>the certificate signature MUST be valid;
-              </li>
-              <li>If a revocation endpoint is set in the certificate, the
-              runtime MUST use it to check this certificate is not revoked.
-              </li>
-            </ul>
-          </li>
-          <li>The SHA-1 digest of the <a>author certificate</a> is used as the
-          device application identifier in the access control verification
-          process, following the GlobalPlatform Access Control process.
+          <li>set the application identifier to be the SHA-1 digest of this
+          <code>origin</code> value.
             <div class="note">
               The SHA-1 hash function is used here because the GlobalPlatform
               Access Control specification for now only supports 20 bytes long
@@ -661,12 +619,15 @@
           </li>
         </ul>
         <p>
+          All applications that are <a>same-origin</a> will get the same
+          application identifier, hence will be granted the same access rules.
+        </p>
+        <p>
           While applying the GlobalPlatform Access Control process, if the
           <a>Access Control Enforcer</a> detects the Secure Element does not
           implement the GlobalPlatform Access Control (it does not have access
-          rules), the <a>Access Control Enforcer</a> may use its own
-          certificate trust store to grant or refuse access to the Secure
-          Element API.
+          rules), the <a>Access Control Enforcer</a> may use its own policy to
+          grant or refuse access to the Secure Element API.
         </p>
       </section>
       <section>
@@ -674,13 +635,11 @@
           Additional security rules
         </h3>
         <p>
-          When an application is not accessed using an <code>app</code> URI,
-          the origin and integrity of its resources must be guaranteed using
-          the following security restriction:
+          To be eligible to gain access to the Secure Element API, a web
+          application must meet the following requirements:
         </p>
         <ul>
-          <li>To be eligible to gain access to the Secure Element API, a hosted
-          web application MUST be fetched using HTTPS protocol.
+          <li>The web application MUST be fetched using HTTPS protocol.
           </li>
           <li>The TLS/SSL server certificate of this HTTPS connection MUST be
           trusted and valid:
